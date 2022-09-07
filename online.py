@@ -15,3 +15,9 @@ def event_is_in_the_future(event_id):
     except:
         return False
 
+def add_registration_start_to_event(event):
+    response = get(f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event["id"]}/?format=json')
+    data = response.json()
+    registration_start = data['registration_start']
+    event['registration_start'] = registration_start
+    return event
