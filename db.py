@@ -28,7 +28,6 @@ class Database:
             print("not connected to database")
             return False
         collection = self.db["events"]
-        print(f"checking if event {event_id} exists in database")
         return collection.find_one({"id": event_id}) is not None
 
     def add_events_to_database(self, events):
