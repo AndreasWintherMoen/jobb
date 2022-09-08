@@ -8,6 +8,10 @@ load_dotenv()
 api = Flask(__name__)
 api.debug = False
 
+@api.route('/ping', methods=['GET'])
+def ping():
+    return 'pong'
+
 @api.route('/jobb/sms', methods=['POST'])
 def sms():
     number = request.form['From']
