@@ -6,6 +6,7 @@ from sms import format_message_for_events, send_multiple_sms
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from utils import get_delay_until_five_minutes_before_event, timezone
+from api import api
 
 load_dotenv()
 
@@ -34,7 +35,7 @@ def send_sms_to_subscribed_users(message):
     database = Database()
     database.connect()
     subscribers = database.get_all_subscribers()
-    phone_numbers = [subscriber['phone'] for subscriber in subscribers]
+    phone_numbers = [subscriber['phone_number'] for subscriber in subscribers]
     send_multiple_sms(message, phone_numbers)
     database.disconnect()
 
@@ -60,4 +61,5 @@ def run_daily_update():
 
 if __name__ == '__main__':
     print("Starting bedpres bot...")
-    run_daily_update()
+    threading.Thread(target=lambda: api.run()).start()
+    threading.Thread(target=run_daily_update).start()

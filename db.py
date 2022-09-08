@@ -76,5 +76,19 @@ class Database:
         if not self.is_connected:
             print("not connected to database")
             return []
-        collection = self.db["phone-numbers"]
+        collection = self.db["subscribers"]
         return list(collection.find())
+
+    def add_subscriber(self, phone_number):
+        if not self.is_connected:
+            print("not connected to database")
+            return
+        collection = self.db["subscribers"]
+        collection.insert_one({"phone_number": phone_number})
+
+    def remove_subscriber(self, phone_number):
+        if not self.is_connected:
+            print("not connected to database")
+            return
+        collection = self.db["subscribers"]
+        collection.delete_one({"phone_number": phone_number})
