@@ -40,3 +40,6 @@ def remove_subscriber(number):
     database.connect()
     database.remove_subscriber(number)
     database.disconnect()
+
+if __name__ == '__main__':
+    api.run()

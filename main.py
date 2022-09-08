@@ -61,5 +61,4 @@ def run_daily_update():
 
 if __name__ == '__main__':
     print("Starting bedpres bot...")
-    threading.Thread(target=lambda: api.run()).start()
-    threading.Thread(target=run_daily_update).start()
+    run_daily_update()
