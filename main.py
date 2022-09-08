@@ -1,5 +1,12 @@
+import threading
 from online import get_event_list, event_is_in_the_future, add_registration_start_to_event
 from db import Database
+from sms import format_message_for_events, send_multiple_sms
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
+from utils import get_delay_until_five_minutes_before_event, timezone
+
+load_dotenv()
 
 def is_relevant_event(event, db):
     print(f"Analyzing event [{event['id']}] {event['title']}...")
@@ -21,8 +28,28 @@ def discover_new_bedpres_and_add_to_database(db):
     events = [add_registration_start_to_event(event) for event in events]
     db.add_events_to_database(events)
 
+def send_sms_to_subscribed_users(message):
+    database = Database()
+    database.connect()
+    subscribers = database.get_all_subscribers()
+    phone_numbers = [subscriber['phone'] for subscriber in subscribers]
+    send_multiple_sms(message, phone_numbers)
+    database.disconnect()
+
+def schedule_sms_for_todays_events(db):
+    print('schedule_sms_for_todays_events')
+    events = db.get_todays_events_from_database()
+    print(f"Found {len(events)} events")
+    for date in events:
+        time_to_send = get_delay_until_five_minutes_before_event(date)
+        print(f"Sending sms for {date} in {time_to_send} seconds")
+        message = format_message_for_events(events[date])
+        threading.Timer(time_to_send, send_sms_to_subscribed_users, [message]).start()
+    
+
 if __name__ == '__main__':
     database = Database()
     database.connect()
-    discover_new_bedpres_and_add_to_database(database)
+    # schedule_sms_for_todays_events(database)
+    # discover_new_bedpres_and_add_to_database(database)
     database.disconnect()
