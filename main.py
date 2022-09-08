@@ -1,4 +1,5 @@
 import threading
+import time
 from online import get_event_list, event_is_in_the_future, add_registration_start_to_event
 from db import Database
 from sms import format_message_for_events, send_multiple_sms
@@ -19,6 +20,7 @@ def is_relevant_event(event, db):
     return True
 
 def discover_new_bedpres_and_add_to_database(db):
+    print("Discovering new bedpres events...")
     events = get_event_list()
     total_count = len(events)
     print(f"Fetched {total_count} events")
@@ -37,7 +39,7 @@ def send_sms_to_subscribed_users(message):
     database.disconnect()
 
 def schedule_sms_for_todays_events(db):
-    print('schedule_sms_for_todays_events')
+    print('Scheduling SMS for today...')
     events = db.get_todays_events_from_database()
     print(f"Found {len(events)} events")
     for date in events:
@@ -46,10 +48,16 @@ def schedule_sms_for_todays_events(db):
         message = format_message_for_events(events[date])
         threading.Timer(time_to_send, send_sms_to_subscribed_users, [message]).start()
     
-
-if __name__ == '__main__':
+def run_daily_update():
+    print('Performing daily update...')
     database = Database()
     database.connect()
-    # schedule_sms_for_todays_events(database)
-    # discover_new_bedpres_and_add_to_database(database)
+    discover_new_bedpres_and_add_to_database(database)
+    time.sleep(2)
+    schedule_sms_for_todays_events(database)
     database.disconnect()
+    threading.Timer(24*60*60, run_daily_update).start()
+
+if __name__ == '__main__':
+    print("Starting bedpres bot...")
+    run_daily_update()
