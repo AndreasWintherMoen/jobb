@@ -1,6 +1,9 @@
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from db import Database
+from dotenv import load_dotenv
+
+load_dotenv()
 
 api = Flask(__name__)
 api.debug = False
