@@ -2,11 +2,14 @@ from pymongo import MongoClient
 import os
 from datetime import datetime, timedelta
 import pytz
+import logging
 
 timezone = pytz.timezone('Europe/Oslo')
 
+
 class Database:
     def __init__(self):
+        logging.info("initializing database...")
         self.db_uri = os.environ.get('MONGO_URI')
         self.db_client = None
         self.db = None
@@ -16,42 +19,42 @@ class Database:
         self.db_client = MongoClient(self.db_uri)
         self.db = self.db_client['JOBB']
         self.is_connected = True
-        print("connected to database")
+        logging.info("connected to database")
 
     def disconnect(self):
         self.db_client.close
         self.db = None
         self.is_connected = False
-        print("disconnected from database")
+        logging.info("disconnected from database")
 
     def event_exists_in_database(self, event_id):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return False
         collection = self.db["events"]
         return collection.find_one({"id": event_id}) is not None
 
     def add_events_to_database(self, events):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return 
         if (len(events) == 0):
-            print("no events to add")
+            logging.warning("no events to add")
             return
-        print(f"adding {len(events)} events to database")
+        logging.info(f"adding {len(events)} events to database")
         collection = self.db["events"]
         collection.insert_many(events, ordered=False)
 
     def get_all_events_from_database(self):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return []
         collection = self.db["events"]
         return list(collection.find())
 
     def get_todays_events_from_database(self):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return []
         collection = self.db["events"]
         current_time = datetime.now(timezone)
@@ -74,21 +77,21 @@ class Database:
 
     def get_all_subscribers(self):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return []
         collection = self.db["subscribers"]
         return list(collection.find())
 
     def add_subscriber(self, phone_number):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return
         collection = self.db["subscribers"]
         collection.insert_one({"phone_number": phone_number})
 
     def remove_subscriber(self, phone_number):
         if not self.is_connected:
-            print("not connected to database")
+            logging.warning("not connected to database")
             return
         collection = self.db["subscribers"]
         collection.delete_one({"phone_number": phone_number})
