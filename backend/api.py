@@ -9,7 +9,7 @@ load_dotenv()
 api = Flask(__name__)
 api.debug = False
 
-@api.route('/ping', methods=['GET'])
+@api.route('/jobb/ping', methods=['GET'])
 def ping():
     return 'pong'
 
