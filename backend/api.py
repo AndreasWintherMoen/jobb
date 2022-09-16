@@ -9,12 +9,16 @@ load_dotenv()
 api = Flask(__name__)
 api.debug = False
 
+logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
+
 @api.route('/jobb/ping', methods=['GET'])
 def ping():
+    logging.info('Ping endpoint hit')
     return 'pong'
 
 @api.route('/jobb/sms', methods=['POST'])
 def sms():
+    logging.info('SMS endpoint hit')
     number = request.form['From']
     message = request.form['Body']
     formatted_message = message.lower().strip()
@@ -50,6 +54,4 @@ def remove_subscriber(number):
     database.disconnect()
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
-    logging.info('Starting API...')
     api.run()
