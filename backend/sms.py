@@ -1,5 +1,6 @@
 from twilio.rest import Client 
 import os
+import logging
 
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
@@ -25,7 +26,7 @@ def send_sms(message, phone_number):
         body=message,
         messaging_service_sid=messaging_service_sid,
     )
-    print(f"Sent sms to {phone_number} with confirmation code {confirmation.sid}. Message: {message}")
+    logging.info(f"Sent sms to {phone_number} with confirmation code {confirmation.sid}. Message: {message}")
 
 def send_multiple_sms(message, phone_numbers):
     for phone_number in phone_numbers:
