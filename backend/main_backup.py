@@ -23,19 +23,16 @@ def is_relevant_event(event, db):
         return False
     return True
 
-def discover_new_bedpres_and_add_to_database():
+def discover_new_bedpres_and_add_to_database(db):
     logging.info("Discovering new bedpres events...")
-    database = Database()
-    database.connect()
     events = get_event_list()
     total_count = len(events)
     logging.info(f"Fetched {total_count} events")
-    events = [event for event in events if is_relevant_event(event, database)]
+    events = [event for event in events if is_relevant_event(event, db)]
     filtered_count = len(events)
     logging.info(f"Filtered {total_count} events to {filtered_count} events")
     events = [add_registration_start_to_event(event) for event in events]
-    database.add_events_to_database(events)
-    database.disconnect()
+    db.add_events_to_database(events)
 
 def send_sms_to_subscribed_users(message):
     database = Database()
@@ -45,12 +42,9 @@ def send_sms_to_subscribed_users(message):
     send_multiple_sms(message, phone_numbers)
     database.disconnect()
 
-def schedule_sms_for_todays_events():
+def schedule_sms_for_todays_events(db):
     logging.info('Scheduling SMS for today...')
-    database = Database()
-    database.connect()
-    events = database.get_todays_events_from_database()
-    database.disconnect()
+    events = db.get_todays_events_from_database()
     logging.info(f"Found {len(events)} events")
     for date in events:
         time_to_send = get_delay_until_five_minutes_before_event(date)
@@ -60,9 +54,12 @@ def schedule_sms_for_todays_events():
     
 def run_daily_update():
     logging.info('Performing daily update...')
-    discover_new_bedpres_and_add_to_database()
+    database = Database()
+    database.connect()
+    discover_new_bedpres_and_add_to_database(database)
     time.sleep(2)
-    schedule_sms_for_todays_events()
+    schedule_sms_for_todays_events(database)
+    database.disconnect()
     threading.Timer(24*60*60, run_daily_update).start()
 
 if __name__ == '__main__':
