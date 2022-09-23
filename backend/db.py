@@ -45,6 +45,18 @@ class Database:
         collection = self.db["events"]
         collection.insert_many(events, ordered=False)
 
+    def update_events_in_database(self, events):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return
+        if (len(events) == 0):
+            logging.warning("no events to update")
+            return
+        logging.info(f"updating {len(events)} events in database")
+        collection = self.db["events"]
+        for event in events:
+            collection.replace_one({"id": event["id"]}, event)
+
     def get_all_events_from_database(self):
         if not self.is_connected:
             logging.warning("not connected to database")
