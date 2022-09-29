@@ -24,7 +24,7 @@ def schedule_external_sms_sender(message, time_to_send):
     timestamp = timestamp_pb2.Timestamp()
     timestamp.FromDatetime(d)
     duration = duration_pb2.Duration()
-    duration.FromSeconds(time_to_send + 600)
+    duration.FromSeconds(600)
 
     task = {
         "http_request": {
