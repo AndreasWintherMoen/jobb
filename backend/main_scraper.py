@@ -17,7 +17,6 @@ def is_relevant_event(event):
 
 def discover_new_bedpres_and_add_to_database(data, context):
     logging.info("********* STARTING SCRAPER... *********")
-    logging.info("Discovering new bedpres events...")
     database = Database()
     database.connect()
     events = get_event_list()

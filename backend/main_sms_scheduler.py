@@ -9,7 +9,7 @@ gc_logging_client = google.cloud.logging.Client()
 gc_logging_client.setup_logging()
 
 def schedule_sms_for_todays_events(data, context):
-    logging.info('Scheduling SMS for today...')
+    logging.info("********* SCHEDULING SMS FOR TODAY... *********")
     database = Database()
     database.connect()
     events = database.get_todays_events_from_database()
