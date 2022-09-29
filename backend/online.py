@@ -21,12 +21,16 @@ def event_is_in_the_future(event_id):
         logging.error(f'Failed to fetch event {event_id} from OW')
         return False
 
-def add_registration_start_to_event(event):
+def add_registration_dates_to_event(event):
     try:
         response = get(f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event["id"]}/?format=json', timeout=30)
         data = response.json()
         registration_start = data['registration_start']
+        registration_end = data['registration_end']
+        unattend_deadline = data['unattend_deadline']
         event['registration_start'] = registration_start
+        event['registration_end'] = registration_end
+        event['unattend_deadline'] = unattend_deadline
         return event
     except:
         logging.error(f'Failed to fetch event {event["id"]} from OW')

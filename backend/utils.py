@@ -14,3 +14,6 @@ def get_delay_until_five_minutes_before_event(date):
     run_at = event_time - timedelta(minutes=5)
     delay = (run_at - now).total_seconds()
     return delay
+
+def get_current_date():
+    return datetime.now(timezone)
