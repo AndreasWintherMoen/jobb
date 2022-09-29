@@ -13,7 +13,7 @@ def sms_endpoint(data):
         message = data.json["message"]
         database = Database()
         database.connect()
-        phone_numbers = database.get_phone_numbers_from_database()
+        phone_numbers = [subscriber['phone_number'] for subscriber in database.get_all_subscribers()]
         database.disconnect()
         send_multiple_sms(message, phone_numbers)
         return f"Message successfully sent to {len(phone_numbers)} phone numbers"
