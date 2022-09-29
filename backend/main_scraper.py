@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(
 gc_logging_client = google.cloud.logging.Client()
 gc_logging_client.setup_logging()
 
-def is_relevant_event(event, db):
+def is_relevant_event(event):
     logging.info(f"Analyzing event [{event['id']}] {event['title']}...")
     if event['is_attendance_event'] == False:
         return False
