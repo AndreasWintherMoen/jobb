@@ -43,5 +43,4 @@ def schedule_external_sms_sender(message, time_to_send):
 
     response = client.create_task(request={"parent": parent, "task": task})
 
-    print("Created task {}".format(response.name))
     return response
