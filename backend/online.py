@@ -1,10 +1,12 @@
 from requests import get
-from utils import date_is_in_the_future
+from utils import date_is_in_the_future, get_current_date
 import logging
 
 def get_event_list():
+    date = get_current_date().date()
+    url = f'https://old.online.ntnu.no/api/v1/event/events/?format=json&event_end__gte={date}&page_size=50'
     try:
-        response = get('https://old.online.ntnu.no/api/v1/event/events/?format=json&event_end__gte=2022-09-07&page_size=50', timeout=30)
+        response = get(url)
         data = response.json()
         return data['results']
     except:
