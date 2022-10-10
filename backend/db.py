@@ -16,6 +16,32 @@ class Database:
         self.db = None
         self.is_connected = False
 
+    def __combine_events_with_same_date(self, events, date_field):
+        date_to_events = {}
+        for event in events:
+            date = event[date_field]
+            if date not in date_to_events:
+                date_to_events[date] = []
+            date_to_events[date].append(event)
+        return date_to_events
+
+    def __get_todays_events_from_database(self, search_field):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return []
+        collection = self.db["events"]
+        current_time = datetime.now(timezone)
+        tomorrow = current_time + timedelta(days=9)
+        date_format = "%Y-%m-%dT%H:%M:%S%z"
+        events = collection.find({
+            search_field: {
+                "$gte": current_time.strftime(date_format),
+                "$lt": tomorrow.strftime(date_format)
+            }
+        })
+        events = [{search_field: event[search_field], "title": event["title"]} for event in events]
+        return self.__combine_events_with_same_date(events, search_field)
+
     def connect(self):
         self.db_client = MongoClient(self.db_uri)
         self.db = self.db_client['JOBB']
@@ -65,28 +91,14 @@ class Database:
         collection = self.db["events"]
         return list(collection.find())
 
-    def get_todays_events_from_database(self):
-        if not self.is_connected:
-            logging.warning("not connected to database")
-            return []
-        collection = self.db["events"]
-        current_time = datetime.now(timezone)
-        tomorrow = current_time + timedelta(days=1)
-        date_format = "%Y-%m-%dT%H:%M:%S%z"
-        events = collection.find({
-            "registration_start": {
-                "$gte": current_time.strftime(date_format),
-                "$lt": tomorrow.strftime(date_format)
-            }
-        })
-        events = [{"registration_start": event["registration_start"], "title": event["title"]} for event in events]
-        date_to_events = {}
-        for event in events:
-            date = event['registration_start']
-            if date not in date_to_events:
-                date_to_events[date] = []
-            date_to_events[date].append(event)
-        return date_to_events
+    def get_todays_register_events_from_database(self):
+        return self.__get_todays_events_from_database("registration_start")
+
+    def get_todays_unattend_events_from_database(self):
+        return self.__get_todays_events_from_database("unattend_deadline")
+
+    def get_todays_startdate_events_from_database(self):
+        return self.__get_todays_events_from_database("start_date")
 
     def get_all_subscribers(self):
         if not self.is_connected:
