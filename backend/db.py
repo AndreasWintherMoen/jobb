@@ -3,14 +3,15 @@ import os
 from datetime import datetime, timedelta
 import pytz
 import logging
+from utils import format_phone_number
 
 timezone = pytz.timezone('Europe/Oslo')
 
 
 class Database:
     def __init__(self):
-        logging.info("initializing database...")
         self.db_uri = os.environ.get('MONGO_URI')
+        logging.info(f"initializing database at URI {self.db_uri}...")
         self.db_client = None
         self.db = None
         self.is_connected = False
@@ -107,3 +108,31 @@ class Database:
             return
         collection = self.db["subscribers"]
         collection.delete_one({"phone_number": phone_number})
+
+    def merge_ow_users_and_subscribers(self):
+        '''
+            Adds OW data to subscribers with no current OW data
+        '''
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return
+        sub_collection = self.db["subscribers"]
+        subscribers = list(sub_collection.find({ "ow": { "$exists": False }}))
+        ow_collection = self.db["ow_users"]
+        ow_find_query = { 
+            "phone_number": { "$ne": None }, 
+            "username": { "$ne": None } 
+        }
+        ow_users = list(ow_collection.find(ow_find_query).sort("started_date", -1))
+        for subscriber in subscribers:
+            phone_number = subscriber["phone_number"]
+            for ow_user in ow_users:
+                ow_phone_number = ow_user["phone_number"]
+                if not ow_phone_number:
+                    continue
+                ow_phone_number = format_phone_number(ow_phone_number)
+                if phone_number == ow_phone_number:
+                    subscriber["ow"] = ow_user
+                    sub_collection.replace_one({"phone_number": phone_number}, subscriber)
+                    break
+

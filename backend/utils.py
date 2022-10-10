@@ -28,3 +28,9 @@ def format_message_for_events(events):
 
 def get_current_date():
     return datetime.now(timezone)
+
+def format_phone_number(phone_number):
+    phone_number = phone_number.replace(' ', '')
+    if phone_number[0] == '+':
+        return phone_number
+    return f'+47{phone_number}'
