@@ -25,9 +25,12 @@ def sms():
 
     if formatted_message == 'online':
         logging.info(f"New subscriber: {number}")
-        add_subscriber(number)
+        if add_subscriber(number):
+            response = MessagingResponse()
+            response.message(f"Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
+            return str(response)
         response = MessagingResponse()
-        response.message(f"Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
+        response.message(f"Bruh, du er allerede abonnert, send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
         return str(response)
     elif formatted_message in ['avslutt', 'offline']:
         logging.info(f"Removed subscriber: {number}")
@@ -40,12 +43,13 @@ def sms():
         response = MessagingResponse()
         response.message(f"Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
-
-def add_subscriber(number):
+ 
+def add_subscriber(number) -> bool:
     database = Database()
     database.connect()
-    database.add_subscriber(number)
+    did_subscribe = database.add_subscriber(number)
     database.disconnect()
+    return did_subscribe
 
 def remove_subscriber(number):
     database = Database()
