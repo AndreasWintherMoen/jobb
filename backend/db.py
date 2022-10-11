@@ -98,7 +98,7 @@ class Database:
     def add_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
             logging.warning("not connected to database")
-            return 0
+            return False
         collection = self.db["subscribers"]
         response = collection.update_one({"phone_number": phone_number}, {"upsert": True})
 
