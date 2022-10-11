@@ -95,12 +95,14 @@ class Database:
         collection = self.db["subscribers"]
         return list(collection.find())
 
-    def add_subscriber(self, phone_number):
+    def add_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
             logging.warning("not connected to database")
-            return
+            return 0
         collection = self.db["subscribers"]
-        collection.update_one({"phone_number": phone_number}, {upsert: True})
+        response = collection.update_one({"phone_number": phone_number}, {"upsert": True})
+
+        return response.modifiedCount == 1
 
     def remove_subscriber(self, phone_number):
         if not self.is_connected:
