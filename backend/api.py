@@ -41,11 +41,13 @@ def sms():
         response.message(f"Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
 
-def add_subscriber(number):
+def add_subscriber(number) -> bool:
     database = Database()
     database.connect()
-    database.add_subscriber(number)
+    did_subscribe = database.add_subscriber(number)
     database.disconnect()
+
+    return did_subscribe
 
 def remove_subscriber(number):
     database = Database()
