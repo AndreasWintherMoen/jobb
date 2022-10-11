@@ -27,9 +27,9 @@ def sms():
         logging.info(f"New subscriber: {number}")
         add_subscriber(number)
         response = MessagingResponse()
-        response.message(f"Du er nå abonnert på bedpres-oppdateringer! Send AVSLUTT hvis du ikke lenger vil ha oppdateringer.")
+        response.message(f"Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
         return str(response)
-    elif formatted_message == 'avslutt':
+    elif formatted_message in ['avslutt', 'offline']:
         logging.info(f"Removed subscriber: {number}")
         remove_subscriber(number)
         response = MessagingResponse()
@@ -38,7 +38,7 @@ def sms():
     else:
         logging.debug(f"Unknown message from {number}: {message}")
         response = MessagingResponse()
-        response.message(f"Ukjent kommando. Send ONLINE for å abonnere, og AVSLUTT for å avslutte.")
+        response.message(f"Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
 
 def add_subscriber(number):
