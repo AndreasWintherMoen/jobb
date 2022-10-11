@@ -100,7 +100,7 @@ class Database:
             logging.warning("not connected to database")
             return
         collection = self.db["subscribers"]
-        collection.insert_one({"phone_number": phone_number})
+        collection.update_one({"phone_number": phone_number}, {upsert: True})
 
     def remove_subscriber(self, phone_number):
         if not self.is_connected:
