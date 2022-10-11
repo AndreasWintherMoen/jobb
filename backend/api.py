@@ -34,9 +34,12 @@ def sms():
         return str(response)
     elif formatted_message in ["avslutt", "offline"]:
         logging.info(f"Removed subscriber: {number}")
-        remove_subscriber(number)
+        if remove_subscriber(number):
+            response = MessagingResponse()
+            response.message("Du er nå avmeldt bedpres-oppdateringer.")
+            return str(response)
         response = MessagingResponse()
-        response.message("Du er nå avmeldt bedpres-oppdateringer.")
+        response.message("Du er ikke abonnert. Skriv ONLINE for å abonnere på bedpres-oppdateringer.")
         return str(response)
     else:
         logging.debug(f"Unknown message from {number}: {message}")
@@ -52,11 +55,13 @@ def add_subscriber(number) -> bool:
 
     return did_subscribe
 
-def remove_subscriber(number):
+def remove_subscriber(number) -> bool:
     database = Database()
     database.connect()
-    database.remove_subscriber(number)
+    did_unsubscribe = database.remove_subscriber(number)
     database.disconnect()
+
+    return did_unsubscribe
 
 if __name__ == "__main__":
     api.run()

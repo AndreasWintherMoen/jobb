@@ -105,12 +105,14 @@ class Database:
         return response.modifiedCount > 0
 
 
-    def remove_subscriber(self, phone_number):
+    def remove_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
             logging.warning("not connected to database")
-            return
+            return False
         collection = self.db["subscribers"]
-        collection.delete_one({"phone_number": phone_number})
+        response = collection.delete_one({"phone_number": phone_number})
+
+        return response.modifiedCount > 0
 
     def merge_ow_users_and_subscribers(self):
         '''
