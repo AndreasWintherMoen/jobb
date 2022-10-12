@@ -91,6 +91,13 @@ class Database:
         collection = self.db["events"]
         return list(collection.find())
 
+    def get_events_by_id(self, event_ids):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return []
+        collection = self.db["events"]
+        return list(collection.find({"id": {"$in": event_ids}}))
+
     def get_todays_register_events_from_database(self):
         return self.__get_todays_events_from_database("registration_start")
 
