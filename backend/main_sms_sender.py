@@ -13,7 +13,6 @@ def subscriber_should_receive_message(subscriber, event, message_type: MessageTy
     elif (message_type == MessageType.UNATTEND or message_type == MessageType.EVENT_START):
         return subscriber_is_attending_event(subscriber, event)
     else:
-        print("Message type not supported")
         raise Exception(f"Message type {message_type} not yet supported")
 
 # It may also be possible to do all this logic in one huge MongoDB aggregation pipeline
