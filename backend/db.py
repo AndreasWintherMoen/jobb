@@ -31,7 +31,7 @@ class Database:
             return []
         collection = self.db["events"]
         current_time = datetime.now(timezone)
-        tomorrow = current_time + timedelta(days=9)
+        tomorrow = current_time + timedelta(days=1)
         date_format = "%Y-%m-%dT%H:%M:%S%z"
         events = collection.find({
             search_field: {
