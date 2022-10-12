@@ -4,6 +4,7 @@ from sms import format_message_for_events, send_sms
 from db import Database
 import logging
 import google.cloud.logging
+from utils import subscriber_is_attending_event
 
 def subscriber_should_receive_message(subscriber, event, message_type: MessageType):
     if (message_type == MessageType.REGISTRATION_START):
