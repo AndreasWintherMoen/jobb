@@ -15,6 +15,13 @@ def get_delay_until_five_minutes_before_event(date):
     delay = int((run_at - now).total_seconds())
     return delay
 
+def get_delay_until_one_hour_before_event(date):
+    now = datetime.now(timezone)
+    event_time = now.strptime(date, "%Y-%m-%dT%H:%M:%S%z")
+    run_at = event_time - timedelta(hours=1)
+    delay = int((run_at - now).total_seconds())
+    return delay
+
 def format_message_for_events(events):
     titles = [event['title'] for event in events]
     formatted_titles = ''
@@ -34,3 +41,17 @@ def format_phone_number(phone_number):
     if phone_number[0] == '+':
         return phone_number
     return f'+47{phone_number}'
+
+def format_full_name(subscriber):
+    # Formats full name same way it's done in OW.
+    # See get_full_name in https://github.com/dotkom/onlineweb4/blob/main/apps/authentication/models.py
+    ow_data = subscriber["ow"]
+    full_name = "%s %s" % (ow_data["first_name"], ow_data["last_name"])
+    return full_name.strip()
+
+def subscriber_is_attending_event(subscriber, event):
+    if "ow" not in subscriber:
+        return False
+    full_name = format_full_name(subscriber)
+    users = event['attendees']
+    return full_name in [user["full_name"] for user in users]
