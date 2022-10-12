@@ -1,6 +1,10 @@
+import os
 from requests import get
 from utils import date_is_in_the_future, get_current_date
 import logging
+
+def __get_auth_headers():
+    return {'Cookie': os.environ.get('OW_COOKIE')}
 
 def get_event_list():
     date = get_current_date().date()
@@ -37,3 +41,13 @@ def add_registration_dates_to_event(event):
     except:
         logging.error(f'Failed to fetch event {event["id"]} from OW')
         return event
+
+def get_attendees_for_event(event):
+    url = f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event["id"]}/public-attendees/?format=json'
+    try:
+        response = get(url, timeout=30, headers=__get_auth_headers())
+        users = response.json()
+        return users
+    except:
+        logging.error(f'Failed to fetch event {event["id"]} from OW')
+        return []
