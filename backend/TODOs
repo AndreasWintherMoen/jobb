@@ -1,6 +1,0 @@
-1. Sende påminnelse 1 time før avmeldingsfrist
-   - add OW data
-2. Støtte for ads
-   - add is_pro_account and ads_received to db
-3. Web interface (senere)Web interface (senere)
-4. Flytte alt til google cloud
