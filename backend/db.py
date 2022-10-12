@@ -39,7 +39,6 @@ class Database:
                 "$lt": tomorrow.strftime(date_format)
             }
         })
-        events = [{search_field: event[search_field], "title": event["title"]} for event in events]
         return self.__combine_events_with_same_date(events, search_field)
 
     def connect(self):
@@ -104,7 +103,7 @@ class Database:
     def get_todays_unattend_events_from_database(self):
         return self.__get_todays_events_from_database("unattend_deadline")
 
-    def get_todays_startdate_events_from_database(self):
+    def get_todays_start_events_from_database(self):
         return self.__get_todays_events_from_database("start_date")
 
     def get_all_subscribers(self):

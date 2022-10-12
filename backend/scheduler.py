@@ -5,6 +5,8 @@ from google.cloud import tasks_v2
 from google.protobuf import duration_pb2, timestamp_pb2
 import logging
 
+from enums import MessageType
+
 client = tasks_v2.CloudTasksClient()
 
 project = os.environ.get('GC_PROJECT_ID')
@@ -14,9 +16,9 @@ service_account_email = os.environ.get('SERVICE_ACCOUNT_EMAIL')
 parent = client.queue_path(project, location, queue)
 url = os.environ.get('SMS_SEND_URL')
 
-def schedule_external_sms_sender(message, time_to_send):
+def schedule_external_sms_sender(event_ids: list[int], message_type: MessageType, time_to_send: int):
     logging.info("schedule_external_sms_sender...")
-    payload = { 'message': message }
+    payload = { 'event_ids': event_ids, 'message_type': message_type.value }
     payload = json.dumps(payload)
     converted_payload = payload.encode()
     d = datetime.datetime.utcnow() + datetime.timedelta(seconds=time_to_send)
