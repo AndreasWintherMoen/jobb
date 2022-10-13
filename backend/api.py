@@ -9,11 +9,10 @@ load_dotenv()
 api = Flask(__name__)
 api.debug = False
 
-database = Database()
-
-database.connect()
-
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
+
+database = Database()
+database.connect()
 
 @api.route('/jobb/ping', methods=['GET'])
 def ping():
