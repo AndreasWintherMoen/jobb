@@ -11,6 +11,9 @@ api.debug = False
 
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 
+database = Database()
+database.connect()
+
 @api.route('/jobb/ping', methods=['GET'])
 def ping():
     logging.info('Ping endpoint hit')
@@ -42,16 +45,14 @@ def sms():
         return str(response)
 
 def add_subscriber(number):
-    database = Database()
-    database.connect()
+    if not database.is_connected:
+        database.connect()
     database.add_subscriber(number)
-    database.disconnect()
 
 def remove_subscriber(number):
-    database = Database()
-    database.connect()
+    if not database.is_connected:
+        database.connect()
     database.remove_subscriber(number)
-    database.disconnect()
 
 if __name__ == '__main__':
     api.run()
