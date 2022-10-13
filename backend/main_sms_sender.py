@@ -27,8 +27,8 @@ def sms_endpoint(data):
         database = Database()
         database.connect()
 
-        event_ids = data['event_ids']
-        message_type = MessageType(data['message_type'])
+        event_ids = data.json['event_ids']
+        message_type = MessageType(data.json['message_type'])
 
         subscribers = database.get_all_subscribers() # TODO: Change this to database.get_subscribers_for_events(event_ids)
         events = database.get_events_by_id(event_ids)
