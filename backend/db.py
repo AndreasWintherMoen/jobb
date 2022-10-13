@@ -100,9 +100,13 @@ class Database:
             logging.warning("not connected to database")
             return False
         collection = self.db["subscribers"]
-        response = collection.update_one({"phone_number": phone_number}, {"upsert": True})
+        response = collection.update_one(
+            {"phone_number": phone_number}, 
+            { "$set": {"phone_number": phone_number} }, 
+            upsert=True
+        )
 
-        return response.modifiedCount > 0
+        return response.matched_count == 0
 
 
     def remove_subscriber(self, phone_number) -> bool:
@@ -112,7 +116,7 @@ class Database:
         collection = self.db["subscribers"]
         response = collection.delete_one({"phone_number": phone_number})
 
-        return response.modifiedCount > 0
+        return response.deleted_count > 0
 
     def merge_ow_users_and_subscribers(self):
         '''
