@@ -113,6 +113,13 @@ class Database:
         collection = self.db["subscribers"]
         return list(collection.find())
 
+    def get_subscribers_for_ads(self):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return []
+        collection = self.db["subscribers"]
+        return list(collection.find({"should_receive_ads": True}))
+
     def add_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
             logging.warning("not connected to database")
@@ -125,7 +132,6 @@ class Database:
         )
 
         return response.matched_count == 0
-
 
     def remove_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
@@ -163,3 +169,19 @@ class Database:
                     sub_collection.replace_one({"phone_number": phone_number}, subscriber)
                     break
 
+    def get_active_ads(self):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return []
+        collection = self.db["ads"]
+        return list(collection.find({ "is_active": True }).sort("priority_order", 1))
+
+    def add_new_ad_received(self, ad_key, subscriber):
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return
+        collection = self.db["subscribers"]
+        collection.update_one(
+            {"_id": subscriber["_id"]},
+            { "$push": { "ads_received": ad_key } }
+        )
