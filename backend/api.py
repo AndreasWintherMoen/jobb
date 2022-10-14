@@ -11,7 +11,14 @@ api.debug = False
 
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] %(levelname)s: %(message)s")
 
+<<<<<<< HEAD
 @api.route("/jobb/ping", methods=["GET"])
+=======
+database = Database()
+database.connect()
+
+@api.route('/jobb/ping', methods=['GET'])
+>>>>>>> origin/master
 def ping():
     logging.info("Ping endpoint hit")
     return "pong"
@@ -47,20 +54,16 @@ def sms():
         response.message("Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
 
-def add_subscriber(number) -> bool:
-    database = Database()
-    database.connect()
+def add_subscriber(number):
+    if not database.is_connected:
+        database.connect()
     did_subscribe = database.add_subscriber(number)
-    database.disconnect()
-
     return did_subscribe
 
-def remove_subscriber(number) -> bool:
-    database = Database()
-    database.connect()
+def remove_subscriber(number):
+    if not database.is_connected:
+        database.connect()
     did_unsubscribe = database.remove_subscriber(number)
-    database.disconnect()
-
     return did_unsubscribe
 
 if __name__ == "__main__":

@@ -16,6 +16,6 @@ Først hadde jeg tenkt å scrape OW, så jeg startet med Python fordi det har je
 ## Hva er planen framover? 📝
 
 - [x] ~~Lage en enkel backend som sender SMS til subscribers før påmeldingsfrist.~~
-- [ ] Legge til funksjonalitet i backend for å sende ut påminnelse før avmeldingsfrist. For å gjøre dette må OW-data integreres med nåværende subscribers i databasen, og brukere meldt på arrangementet må sammenlignes med subscribers for å finne ut hvem som skal få SMS.
+- [x] Legge til funksjonalitet i backend for å sende ut påminnelse før avmeldingsfrist. For å gjøre dette må OW-data integreres med nåværende subscribers i databasen, og brukere meldt på arrangementet må sammenlignes med subscribers for å finne ut hvem som skal få SMS.
 - [ ] Ad support 💰. Målet med Bedpres Bot er på ingen måte å tjene penger, men det hadde vært fint å ikke tape mye penger heller. Jeg tenkte derfor vi kan sende ut SMS regelmessig (tenker maks én gang i måneden) med en referral til en eller annen tjeneste jeg bruker. For denne løsningen er det viktig å ikke spamme folk, så jeg har lyst til å ha oversikt over hvilke ads brukere har mottatt, sånn at de ikke får samme ad flere ganger. Brukere som har vippset synes jeg bør få en ad-fri versjon av tjenesten.
 - [ ] Lage en frontend med mulighet til å vise kommende bedpres og slå av og på SMS-varsel. Må ha innlogging med Online-bruker. Målet er å ha en deployed versjon før neste semester starter.
