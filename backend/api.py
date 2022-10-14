@@ -11,14 +11,10 @@ api.debug = False
 
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] %(levelname)s: %(message)s")
 
-<<<<<<< HEAD
-@api.route("/jobb/ping", methods=["GET"])
-=======
 database = Database()
 database.connect()
 
 @api.route('/jobb/ping', methods=['GET'])
->>>>>>> origin/master
 def ping():
     logging.info("Ping endpoint hit")
     return "pong"
