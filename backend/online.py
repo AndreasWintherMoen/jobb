@@ -1,12 +1,14 @@
 import os
-from requests import get
+from typing import List
+from requests import get # type: ignore
 from utils import date_is_in_the_future, get_current_date
 import logging
+from config.types import Event, EventAttendee
 
 def __get_auth_headers():
     return {'Cookie': os.environ.get('OW_COOKIE')}
 
-def get_event_list():
+def get_event_list() -> List[Event]:
     date = get_current_date().date()
     url = f'https://old.online.ntnu.no/api/v1/event/events/?format=json&event_end__gte={date}&page_size=50'
     try:
@@ -17,7 +19,7 @@ def get_event_list():
         logging.error('Failed to fetch events from OW')
         return []
 
-def event_is_in_the_future(event_id):
+def event_is_in_the_future(event_id: int) -> bool:
     try:
         response = get(f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event_id}/?format=json', timeout=30)
         data = response.json()
@@ -27,7 +29,7 @@ def event_is_in_the_future(event_id):
         logging.error(f'Failed to fetch event {event_id} from OW')
         return False
 
-def add_registration_dates_to_event(event):
+def add_registration_dates_to_event(event: Event) -> Event:
     try:
         response = get(f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event["id"]}/?format=json', timeout=30)
         data = response.json()
@@ -42,7 +44,7 @@ def add_registration_dates_to_event(event):
         logging.error(f'Failed to fetch event {event["id"]} from OW')
         return event
 
-def get_attendees_for_event(event):
+def get_attendees_for_event(event: Event) -> List[EventAttendee]:
     url = f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event["id"]}/public-attendees/?format=json'
     try:
         response = get(url, timeout=30, headers=__get_auth_headers())

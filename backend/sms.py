@@ -1,9 +1,9 @@
-from typing import Any, List
-from twilio.rest import Client
+from typing import List, Sequence
+from twilio.rest import Client 
 import os
 import logging
-
 from enums import MessageType
+from config.types import Event
 
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
@@ -11,15 +11,15 @@ messaging_service_sid = os.environ.get('TWILIO_MESSAGING_SERVICE_SID')
 sender = 'Bedpres Bot'
 
 
-def __stringify_event_list(events: Any) -> List[str]:
+def __stringify_event_list(events: Sequence[Event]) -> List[str]:
     return [event['title'] for event in events]
 
 
-def __list_events_as_string(events: List[str]) -> str:
+def __list_events_as_string(events: Sequence[str]) -> str:
     return ' - ' + '\n - '.join(events)
 
 
-def __format_registration_start_message_for_events(events) -> str:
+def __format_registration_start_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
     return f"Påmelding til\n{titles_as_bulletin}\nåpner om 5 minutter"
@@ -39,7 +39,7 @@ def __format_event_start_message_for_events(events) -> str:
     return f"Arrangementet\n{titles_as_bulletin}\nstarter om 1 time"
 
 
-def format_message_for_events(events, message_type):
+def format_message_for_events(events: Sequence[Event], message_type: MessageType) -> str:
     if (message_type == MessageType.REGISTRATION_START):
         return __format_registration_start_message_for_events(events)
     elif (message_type == MessageType.UNATTEND):
@@ -49,8 +49,7 @@ def format_message_for_events(events, message_type):
     else:
         return f"message type {message_type} not supported"
 
-
-def send_sms(message, phone_number):
+def send_sms(message: str, phone_number: str) -> None:
     client = Client(account_sid, auth_token)
     confirmation = client.messages.create(
         to=phone_number,
@@ -62,6 +61,6 @@ def send_sms(message, phone_number):
         f"Sent sms to {phone_number} with confirmation code {confirmation.sid}. Message: {message}")
 
 
-def send_multiple_sms(message, phone_numbers):
+def send_multiple_sms(message: str, phone_numbers: List[str]) -> None:
     for phone_number in phone_numbers:
         send_sms(message, phone_number)

@@ -15,12 +15,12 @@ database = Database()
 database.connect()
 
 @api.route('/jobb/ping', methods=['GET'])
-def ping():
+def ping() -> str:
     logging.info("Ping endpoint hit")
     return "pong"
 
 @api.route("/jobb/sms", methods=["POST"])
-def sms():
+def sms() -> str:
     logging.info("SMS endpoint hit")
     number = request.form["From"]
     message = request.form["Body"]
@@ -50,16 +50,16 @@ def sms():
         response.message("Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
 
-def add_subscriber(number):
+def add_subscriber(phone_number: str) -> bool:
     if not database.is_connected:
         database.connect()
-    did_subscribe = database.add_subscriber(number)
+    did_subscribe = database.add_subscriber(phone_number)
     return did_subscribe
 
-def remove_subscriber(number):
+def remove_subscriber(phone_number: str) -> bool:
     if not database.is_connected:
         database.connect()
-    did_unsubscribe = database.remove_subscriber(number)
+    did_unsubscribe = database.remove_subscriber(phone_number)
     return did_unsubscribe
 
 if __name__ == "__main__":
