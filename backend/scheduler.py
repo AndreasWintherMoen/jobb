@@ -1,8 +1,9 @@
 import os
 import datetime
 import json
+from typing import Any
 from google.cloud import tasks_v2
-from google.protobuf import duration_pb2, timestamp_pb2
+from google.protobuf import duration_pb2, timestamp_pb2 # type: ignore
 import logging
 
 from enums import MessageType
@@ -13,12 +14,16 @@ project = os.environ.get('GC_PROJECT_ID')
 queue = os.environ.get('GC_QUEUE')
 location = os.environ.get('GC_LOCATION')
 service_account_email = os.environ.get('SERVICE_ACCOUNT_EMAIL')
-parent = client.queue_path(project, location, queue)
 url = os.environ.get('SMS_SEND_URL')
 
-def schedule_external_sms_sender(event_ids: list[int], message_type: MessageType, time_to_send: int):
+if not project or not queue or not location or not service_account_email or not url:
+    raise ValueError("Missing environment variables")
+
+parent = client.queue_path(project, location, queue)
+
+def schedule_external_sms_sender(event_ids: list[int], message_type: MessageType, time_to_send: int) -> Any:
     logging.info("schedule_external_sms_sender...")
-    payload = { 'event_ids': event_ids, 'message_type': message_type.value }
+    payload: Any = { 'event_ids': event_ids, 'message_type': message_type.value }
     payload = json.dumps(payload)
     converted_payload = payload.encode()
     d = datetime.datetime.utcnow() + datetime.timedelta(seconds=time_to_send)

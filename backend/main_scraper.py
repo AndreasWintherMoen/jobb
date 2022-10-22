@@ -1,3 +1,4 @@
+from config.types import Event
 from online import get_event_list, event_is_in_the_future, add_registration_dates_to_event
 from db import Database
 import logging
@@ -7,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(
 gc_logging_client = google.cloud.logging.Client()
 gc_logging_client.setup_logging()
 
-def is_relevant_event(event):
+def is_relevant_event(event: Event) -> bool:
     logging.info(f"Analyzing event [{event['id']}] {event['title']}...")
     if event['is_attendance_event'] == False:
         return False

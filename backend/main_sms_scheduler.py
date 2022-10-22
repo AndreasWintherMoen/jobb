@@ -1,15 +1,17 @@
+from typing import List, Tuple
 from scheduler import schedule_external_sms_sender
-from db import Database
+from db import Database, date_to_events
 import logging
 import google.cloud.logging
 from enums import MessageType
+from config.types import Event
 from utils import get_delay_until_five_minutes_before_event, get_delay_until_one_hour_before_event
 
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 gc_logging_client = google.cloud.logging.Client()
 gc_logging_client.setup_logging()
 
-def get_todays_events():
+def get_todays_events() -> Tuple[ date_to_events, date_to_events, date_to_events ]:
     database = Database()
     database.connect()
     register_events = database.get_todays_register_events_from_database()
@@ -18,7 +20,7 @@ def get_todays_events():
     database.disconnect()
     return register_events, unattend_events, start_events
 
-def schedule_sms_for_todays_events(data, context):
+def schedule_sms_for_todays_events(data, context) -> str:
     logging.info("********* SCHEDULING SMS FOR TODAY... *********")
     register_events, unattend_events, start_events = get_todays_events()
     logging.info(f"Found {len(register_events)} register events, {len(unattend_events)} unattend events and {len(start_events)} start events to schedule SMS for")
