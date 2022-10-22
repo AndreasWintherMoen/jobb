@@ -22,21 +22,19 @@ def __list_events_as_string(events: Sequence[str]) -> str:
 def __format_registration_start_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
-    return f"Påmelding til\n{titles_as_bulletin}\nåpner om 5 minutter"
+    return f"Påmelding åpner om 5 minutter til:\n{titles_as_bulletin}"
 
 
 def __format_unattend_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
-    return f"Frist for avmelding til\n{titles_as_bulletin}\ner om 1 time"
+    return f"Avmeldingsfrist om 1 time til:\n{titles_as_bulletin}"
 
 
 def __format_event_start_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
-    if len(formatted_titles) > 1:
-        return f"Arrangementene\n{titles_as_bulletin}\nstarter om 1 time"
-    return f"Arrangementet\n{titles_as_bulletin}\nstarter om 1 time"
+    return f"Om 1 time starter:\n{titles_as_bulletin}"
 
 
 def format_message_for_events(events: Sequence[Event], message_type: MessageType) -> str:
