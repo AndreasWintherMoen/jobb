@@ -25,13 +25,13 @@ def __format_registration_start_message_for_events(events: Sequence[Event]) -> s
     return f"Påmelding til\n{titles_as_bulletin}\nåpner om 5 minutter"
 
 
-def __format_unattend_message_for_events(events) -> str:
+def __format_unattend_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
     return f"Frist for avmelding til\n{titles_as_bulletin}\ner om 1 time"
 
 
-def __format_event_start_message_for_events(events) -> str:
+def __format_event_start_message_for_events(events: Sequence[Event]) -> str:
     formatted_titles = __stringify_event_list(events)
     titles_as_bulletin = __list_events_as_string(formatted_titles)
     if len(formatted_titles) > 1:
