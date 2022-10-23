@@ -79,8 +79,12 @@ def map_phone_number_to_subscriber(phone_number: str) -> Subscriber:
 def add_subscriber(subscriber: Subscriber) -> bool:
     if not database.is_connected:
         database.connect()
-    did_subscribe = database.add_subscriber(subscriber)
-    return did_subscribe
+    phone_number = subscriber['phone_number']
+    if database.subscriber_exists(phone_number):
+        return False
+    if database.subscriber_exists(phone_number, True):
+        return database.re_activate_subscriber(phone_number)
+    return database.add_subscriber(subscriber)
 
 def remove_subscriber(phone_number: str) -> bool:
     if not database.is_connected:
