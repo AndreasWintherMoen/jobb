@@ -174,33 +174,6 @@ class Database:
         collection = self.db["ow_users"]
         collection.insert_many(ow_users, ordered=False)
 
-    def merge_ow_users_and_subscribers(self) -> None:
-        '''
-            Adds OW data to subscribers with no current OW data
-        '''
-        if not self.is_connected:
-            logging.warning("not connected to database")
-            return
-        sub_collection = self.db["subscribers"]
-        subscribers: List[Subscriber] = list(sub_collection.find({ "ow": { "$exists": False }}))
-        ow_collection = self.db["ow_users"]
-        ow_find_query = { 
-            "phone_number": { "$ne": None }, 
-            "username": { "$ne": None } 
-        }
-        ow_users = list(ow_collection.find(ow_find_query).sort("started_date", -1))
-        for subscriber in subscribers:
-            phone_number = subscriber["phone_number"]
-            for ow_user in ow_users:
-                ow_phone_number = ow_user["phone_number"]
-                if not ow_phone_number:
-                    continue
-                ow_phone_number = format_phone_number(ow_phone_number)
-                if phone_number == ow_phone_number:
-                    subscriber["ow"] = ow_user
-                    sub_collection.replace_one({"phone_number": phone_number}, subscriber)
-                    break
-
     def get_active_ads(self) -> List[Ad]:
         if not self.is_connected:
             logging.warning("not connected to database")
