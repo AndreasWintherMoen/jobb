@@ -1,13 +1,13 @@
 from typing import List, Sequence
 from twilio.rest import Client 
-import os
 import logging
+from config.env import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_MESSAGING_SERVICE_SID
 from enums import MessageType
 from config.types import Event
 
-account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
-messaging_service_sid = os.environ.get('TWILIO_MESSAGING_SERVICE_SID')
+account_sid = TWILIO_ACCOUNT_SID
+auth_token = TWILIO_AUTH_TOKEN
+messaging_service_sid = TWILIO_MESSAGING_SERVICE_SID
 sender = 'Bedpres Bot'
 
 

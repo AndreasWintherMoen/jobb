@@ -1,9 +1,9 @@
 from typing import Dict, List, Optional, cast
 from pymongo import MongoClient
-import os
 from datetime import datetime, timedelta
 import pytz # type: ignore
 import logging
+from config.env import ENVIRONMENT, MONGO_URI
 from config.types import Ad, Event, OWData, Subscriber, event_notification_field
 from utils import format_phone_number
 
@@ -13,8 +13,8 @@ date_to_events = Dict[event_notification_field, List[Event]]
 
 class Database:
     def __init__(self):
-        self.db_uri = os.environ.get('MONGO_URI')
-        logging.info(f"initializing database at URI {self.db_uri}...")
+        self.db_uri = MONGO_URI
+        custom_logger.info(f"initializing database at URI {self.db_uri}...")
         self.db_client = None
         self.db = None
         self.is_connected = False
@@ -46,7 +46,8 @@ class Database:
 
     def connect(self) -> None:
         self.db_client = MongoClient(self.db_uri)
-        self.db = self.db_client['JOBB']
+        db_name = 'dev' if ENVIRONMENT == 'dev' else 'JOBB'
+        self.db = self.db_client[db_name]
         self.is_connected = True
         logging.info("connected to database")
 

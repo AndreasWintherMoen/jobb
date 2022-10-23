@@ -1,20 +1,20 @@
-import os
 import datetime
 import json
 from typing import Any
 from google.cloud import tasks_v2
 from google.protobuf import duration_pb2, timestamp_pb2 # type: ignore
 import logging
+from config.env import SCHEDULER_LOCATION, SCHEDULER_PROJECT_ID, SCHEDULER_QUEUE, SERVICE_ACCOUNT_EMAIL, SMS_SEND_URL
 
 from enums import MessageType
 
 client = tasks_v2.CloudTasksClient()
 
-project = os.environ.get('GC_PROJECT_ID')
-queue = os.environ.get('GC_QUEUE')
-location = os.environ.get('GC_LOCATION')
-service_account_email = os.environ.get('SERVICE_ACCOUNT_EMAIL')
-url = os.environ.get('SMS_SEND_URL')
+project = SCHEDULER_PROJECT_ID
+queue = SCHEDULER_QUEUE
+location = SCHEDULER_LOCATION
+service_account_email = SERVICE_ACCOUNT_EMAIL
+url = SMS_SEND_URL
 
 if not project or not queue or not location or not service_account_email or not url:
     raise ValueError("Missing environment variables")
