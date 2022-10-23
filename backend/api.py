@@ -1,5 +1,6 @@
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
+from config.types import Subscriber
 from db import Database
 from dotenv import load_dotenv
 import logging
@@ -10,6 +11,11 @@ api = Flask(__name__)
 api.debug = False
 
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] %(levelname)s: %(message)s")
+
+default_subscriber = {
+    "ads_received": [],
+    "should_receive_ads": True,
+}
 
 database = Database()
 database.connect()
@@ -28,7 +34,8 @@ def sms() -> str:
 
     if formatted_message == "online":
         logging.info(f"New subscriber: {number}")
-        if add_subscriber(number):
+        new_subscriber = map_phone_number_to_subscriber(number)
+        if add_subscriber(new_subscriber):
             response = MessagingResponse()
             response.message("Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
             return str(response)
@@ -50,10 +57,20 @@ def sms() -> str:
         response.message("Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
         return str(response)
 
-def add_subscriber(phone_number: str) -> bool:
+def map_phone_number_to_subscriber(phone_number: str) -> Subscriber:
     if not database.is_connected:
         database.connect()
-    did_subscribe = database.add_subscriber(phone_number)
+    ow_data = database.get_ow_data_for_phone_number(phone_number)
+    return {
+        **default_subscriber, # type: ignore
+        'phone_number': phone_number,
+        'ow': ow_data,
+    } 
+
+def add_subscriber(subscriber: Subscriber) -> bool:
+    if not database.is_connected:
+        database.connect()
+    did_subscribe = database.add_subscriber(subscriber)
     return did_subscribe
 
 def remove_subscriber(phone_number: str) -> bool:

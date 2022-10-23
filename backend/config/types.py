@@ -75,7 +75,7 @@ class OWData(TypedDict):
 class Subscriber(TypedDict):
     _id: objectid.ObjectId
     phone_number: str
-    ow: OWData
+    ow: Optional[OWData]
     should_receive_ads: bool
     ads_received: List[str]
 

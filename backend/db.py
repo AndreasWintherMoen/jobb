@@ -1,11 +1,11 @@
-from typing import Dict, List, cast
+from typing import Dict, List, Optional, cast
 from pymongo import MongoClient
 import os
 from datetime import datetime, timedelta
 import pytz # type: ignore
 import logging
-from config.types import Ad, Event, Subscriber, event_notification_field
-from utils import format_full_name, format_phone_number
+from config.types import Ad, Event, OWData, Subscriber, event_notification_field
+from utils import format_phone_number
 
 timezone = pytz.timezone('Europe/Oslo')
 
@@ -123,14 +123,14 @@ class Database:
         collection = self.db["subscribers"]
         return list(collection.find({"should_receive_ads": True}))
 
-    def add_subscriber(self, phone_number: str) -> bool:
+    def add_subscriber(self, subscriber: Subscriber) -> bool:
         if not self.is_connected:
             logging.warning("not connected to database")
             return False
         collection = self.db["subscribers"]
         response = collection.update_one(
-            {"phone_number": phone_number}, 
-            { "$set": {"phone_number": phone_number} }, 
+            {"phone_number": subscriber["phone_number"]}, 
+            { "$set": subscriber }, 
             upsert=True
         )
         return response.matched_count == 0
@@ -142,6 +142,37 @@ class Database:
         collection = self.db["subscribers"]
         response = collection.delete_one({"phone_number": phone_number})
         return response.deleted_count > 0
+
+    # TODO: see if we can put all this logic in a single MongoDB query, i.e. format the OW phone number in the query
+    def get_ow_data_for_phone_number(self, phone_number: str) -> Optional[OWData]:
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return None
+        collection = self.db["ow_users"]
+        query = { 
+            "phone_number": { "$ne": None }, 
+            "username": { "$ne": None } 
+        }
+        ow_users = list(collection.find(query))
+        for user in ow_users:
+            ow_phone_number = user["phone_number"]
+            if not ow_phone_number:
+                continue
+            formatted_phone_number = format_phone_number(ow_phone_number)
+            if formatted_phone_number == phone_number:
+                return user
+        return None
+
+    def add_ow_users(self, ow_users: List[OWData]) -> None:
+        if not self.is_connected:
+            logging.warning("not connected to database")
+            return
+        if (len(ow_users) == 0):
+            logging.warning("no ow users to add")
+            return
+        logging.info(f"adding {len(ow_users)} ow users to database")
+        collection = self.db["ow_users"]
+        collection.insert_many(ow_users, ordered=False)
 
     def merge_ow_users_and_subscribers(self) -> None:
         '''
