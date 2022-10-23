@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, TypedDict
+from typing import List, Tuple
 from enums import MessageType
 from online import get_attendees_for_event
 from sms import format_message_for_events, send_sms
