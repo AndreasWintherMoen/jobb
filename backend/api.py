@@ -28,34 +28,43 @@ def ping() -> str:
 @api.route("/jobb/sms", methods=["POST"])
 def sms() -> str:
     logging.info("SMS endpoint hit")
-    number = request.form["From"]
+    phone_number = request.form["From"]
     message = request.form["Body"]
-    formatted_message = message.lower().strip()
+    response_message = evaluate_user_message(phone_number, message)
+    response = MessagingResponse()
+    response.message(response_message)
+    return str(response)
 
-    if formatted_message == "online":
-        logging.info(f"New subscriber: {number}")
-        new_subscriber = map_phone_number_to_subscriber(number)
-        if add_subscriber(new_subscriber):
-            response = MessagingResponse()
-            response.message("Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
-            return str(response)
-        response = MessagingResponse()
-        response.message("Fant allerede et abonnement på ditt nummer. Send OFFLINE hvis du ikke lenger vil ha oppdateringer.")
-        return str(response)
-    elif formatted_message in ["avslutt", "offline"]:
-        logging.info(f"Removed subscriber: {number}")
-        if remove_subscriber(number):
-            response = MessagingResponse()
-            response.message("Du er nå avmeldt bedpres-oppdateringer.")
-            return str(response)
-        response = MessagingResponse()
-        response.message("Du er ikke abonnert. Skriv ONLINE for å abonnere på bedpres-oppdateringer.")
-        return str(response)
+def handle_subscribe(phone_number: str) -> str:
+    logging.info(f"New subscriber: {phone_number}")
+    new_subscriber = map_phone_number_to_subscriber(phone_number)
+    successfully_added = add_subscriber(new_subscriber)
+    if successfully_added:
+        return "Du er nå abonnert på bedpres-oppdateringer! Send OFFLINE hvis du ikke lenger vil ha oppdateringer."
     else:
-        logging.debug(f"Unknown message from {number}: {message}")
-        response = MessagingResponse()
-        response.message("Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet.")
-        return str(response)
+        return "Du er allerede abonnert på bedpres-oppdateringer. Send OFFLINE hvis du ikke lenger vil ha oppdateringer."
+
+def handle_unsubscribe(phone_number: str) -> str:
+    logging.info(f"Removed subscriber: {phone_number}")
+    successfully_removed = remove_subscriber(phone_number)
+    if successfully_removed:
+        return "Du er nå avmeldt bedpres-oppdateringer."
+    else:
+        return "Du er ikke abonnert. Skriv ONLINE for å abonnere på bedpres-oppdateringer."
+
+def handle_unknown_command(phone_number: str, user_message: str) -> str:
+    logging.debug(f"Unknown message from {phone_number}: {user_message}")
+    return "Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet."
+
+def evaluate_user_message(phone_number: str, user_message: str) -> str:
+    formatted_message = user_message.lower().strip()
+    if formatted_message == "online":
+        return handle_subscribe(phone_number)
+    elif formatted_message in ["avslutt", "offline"]:
+        return handle_unsubscribe(phone_number)
+    else:
+        return handle_unknown_command(phone_number, user_message)
+
 
 def map_phone_number_to_subscriber(phone_number: str) -> Subscriber:
     if not database.is_connected:
