@@ -3,10 +3,9 @@ from enums import MessageType
 from online import get_attendees_for_event
 from sms import format_message_for_events, send_sms
 from db import Database
-import logging
-import google.cloud.logging
 from config.types import Event, EventWithAttendees, Subscriber
 from utils import subscriber_is_attending_event
+import logger
 
 SubscriberEventsPair = Tuple[Subscriber, List[EventWithAttendees]]
 
@@ -23,12 +22,8 @@ def add_attendees_to_event(event: Event) -> EventWithAttendees:
     attendees = get_attendees_for_event(event)
     return {**event, 'attendees': attendees} # type: ignore
 
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
-gc_logging_client = google.cloud.logging.Client()
-gc_logging_client.setup_logging()
-
 def sms_endpoint(data) -> str:
-    logging.info("********* SMS ENDPOINT CALLED... *********")
+    logger.info("********* SMS ENDPOINT CALLED... *********")
     try:
         database = Database()
         database.connect()
@@ -56,7 +51,5 @@ def sms_endpoint(data) -> str:
         
         return 'OK'
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         return "Error sending SMS. See logs for info"
-
-

@@ -1,13 +1,13 @@
 from typing import List, Sequence
 from twilio.rest import Client 
-import os
-import logging
+from config.env import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_MESSAGING_SERVICE_SID
+import logger
 from enums import MessageType
 from config.types import Event
 
-account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
-messaging_service_sid = os.environ.get('TWILIO_MESSAGING_SERVICE_SID')
+account_sid = TWILIO_ACCOUNT_SID
+auth_token = TWILIO_AUTH_TOKEN
+messaging_service_sid = TWILIO_MESSAGING_SERVICE_SID
 sender = 'Bedpres Bot'
 
 
@@ -55,7 +55,7 @@ def send_sms(message: str, phone_number: str) -> None:
         body=message,
         messaging_service_sid=messaging_service_sid,
     )
-    logging.info(
+    logger.info(
         f"Sent sms to {phone_number} with confirmation code {confirmation.sid}. Message: {message}")
 
 
