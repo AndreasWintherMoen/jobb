@@ -2,7 +2,7 @@ from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from config.types import Subscriber
 from db import Database
-import custom_logger
+import logger
 
 api = Flask(__name__)
 api.debug = False
@@ -17,12 +17,12 @@ database.connect()
 
 @api.route('/jobb/ping', methods=['GET'])
 def ping() -> str:
-    custom_logger.info("Ping endpoint hit")
+    logger.info("Ping endpoint hit")
     return "pong"
 
 @api.route("/jobb/sms", methods=["POST"])
 def sms() -> str:
-    custom_logger.info("SMS endpoint hit")
+    logger.info("SMS endpoint hit")
     phone_number = request.form["From"]
     message = request.form["Body"]
     response_message = evaluate_user_message(phone_number, message)
@@ -31,7 +31,7 @@ def sms() -> str:
     return str(response)
 
 def handle_subscribe(phone_number: str) -> str:
-    custom_logger.info(f"New subscriber: {phone_number}")
+    logger.info(f"New subscriber: {phone_number}")
     new_subscriber = map_phone_number_to_subscriber(phone_number)
     successfully_added = add_subscriber(new_subscriber)
     if successfully_added:
@@ -40,7 +40,7 @@ def handle_subscribe(phone_number: str) -> str:
         return "Du er allerede abonnert på bedpres-oppdateringer. Send OFFLINE hvis du ikke lenger vil ha oppdateringer."
 
 def handle_unsubscribe(phone_number: str) -> str:
-    custom_logger.info(f"Removed subscriber: {phone_number}")
+    logger.info(f"Removed subscriber: {phone_number}")
     successfully_removed = remove_subscriber(phone_number)
     if successfully_removed:
         return "Du er nå avmeldt bedpres-oppdateringer."
@@ -48,7 +48,7 @@ def handle_unsubscribe(phone_number: str) -> str:
         return "Du er ikke abonnert. Skriv ONLINE for å abonnere på bedpres-oppdateringer."
 
 def handle_unknown_command(phone_number: str, user_message: str) -> str:
-    custom_logger.debug(f"Unknown message from {phone_number}: {user_message}")
+    logger.debug(f"Unknown message from {phone_number}: {user_message}")
     return "Ukjent kommando. Send ONLINE for å abonnere, og OFFLINE for å avslutte abonnementet."
 
 def evaluate_user_message(phone_number: str, user_message: str) -> str:

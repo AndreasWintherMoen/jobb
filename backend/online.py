@@ -2,7 +2,7 @@ from typing import List
 from requests import get # type: ignore
 from config.env import OW_COOKIE
 from utils import date_is_in_the_future, get_current_date
-import custom_logger
+import logger
 from config.types import Event, EventAttendee
 
 def __get_auth_headers():
@@ -16,7 +16,7 @@ def get_event_list() -> List[Event]:
         data = response.json()
         return data['results']
     except:
-        custom_logger.error('Failed to fetch events from OW')
+        logger.error('Failed to fetch events from OW')
         return []
 
 def event_is_in_the_future(event_id: int) -> bool:
@@ -26,7 +26,7 @@ def event_is_in_the_future(event_id: int) -> bool:
         registration_start = data['registration_start']
         return registration_start is not None and date_is_in_the_future(registration_start)
     except:
-        custom_logger.error(f'Failed to fetch event {event_id} from OW')
+        logger.error(f'Failed to fetch event {event_id} from OW')
         return False
 
 def add_registration_dates_to_event(event: Event) -> Event:
@@ -41,7 +41,7 @@ def add_registration_dates_to_event(event: Event) -> Event:
         event['unattend_deadline'] = unattend_deadline
         return event
     except:
-        custom_logger.error(f'Failed to fetch event {event["id"]} from OW')
+        logger.error(f'Failed to fetch event {event["id"]} from OW')
         return event
 
 def get_attendees_for_event(event: Event) -> List[EventAttendee]:
@@ -51,5 +51,5 @@ def get_attendees_for_event(event: Event) -> List[EventAttendee]:
         users = response.json()
         return users
     except:
-        custom_logger.error(f'Failed to fetch event {event["id"]} from OW')
+        logger.error(f'Failed to fetch event {event["id"]} from OW')
         return []

@@ -1,7 +1,7 @@
 from typing import List, Sequence
 from twilio.rest import Client 
 from config.env import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_MESSAGING_SERVICE_SID
-import custom_logger
+import logger
 from enums import MessageType
 from config.types import Event
 
@@ -55,7 +55,7 @@ def send_sms(message: str, phone_number: str) -> None:
         body=message,
         messaging_service_sid=messaging_service_sid,
     )
-    custom_logger.info(
+    logger.info(
         f"Sent sms to {phone_number} with confirmation code {confirmation.sid}. Message: {message}")
 
 

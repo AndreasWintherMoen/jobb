@@ -5,7 +5,7 @@ from sms import format_message_for_events, send_sms
 from db import Database
 from config.types import Event, EventWithAttendees, Subscriber
 from utils import subscriber_is_attending_event
-import custom_logger
+import logger
 
 SubscriberEventsPair = Tuple[Subscriber, List[EventWithAttendees]]
 
@@ -23,7 +23,7 @@ def add_attendees_to_event(event: Event) -> EventWithAttendees:
     return {**event, 'attendees': attendees} # type: ignore
 
 def sms_endpoint(data) -> str:
-    custom_logger.info("********* SMS ENDPOINT CALLED... *********")
+    logger.info("********* SMS ENDPOINT CALLED... *********")
     try:
         database = Database()
         database.connect()
@@ -51,5 +51,5 @@ def sms_endpoint(data) -> str:
         
         return 'OK'
     except Exception as e:
-        custom_logger.error(e)
+        logger.error(e)
         return "Error sending SMS. See logs for info"

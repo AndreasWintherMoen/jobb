@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 import pytz # type: ignore
 from config.env import ENVIRONMENT, MONGO_URI
-import custom_logger
+import logger
 from config.types import Ad, Event, OWData, Subscriber, event_notification_field
 from utils import format_phone_number
 
@@ -14,7 +14,7 @@ date_to_events = Dict[event_notification_field, List[Event]]
 class Database:
     def __init__(self):
         self.db_uri = MONGO_URI
-        custom_logger.info(f"initializing database at URI {self.db_uri}...")
+        logger.info(f"initializing database at URI {self.db_uri}...")
         self.db_client = None
         self.db = None
         self.is_connected = False
@@ -30,7 +30,7 @@ class Database:
 
     def __get_todays_events_from_database(self, search_field: event_notification_field) -> date_to_events:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return {}
         collection = self.db["events"]
         current_time = datetime.now(timezone)
@@ -49,54 +49,54 @@ class Database:
         db_name = 'dev' if ENVIRONMENT == 'dev' else 'JOBB'
         self.db = self.db_client[db_name]
         self.is_connected = True
-        custom_logger.info(f"connected to database {db_name}")
+        logger.info(f"connected to database {db_name}")
 
     def disconnect(self) -> None:
         self.db_client.close
         self.db = None
         self.is_connected = False
-        custom_logger.info("disconnected from database")
+        logger.info("disconnected from database")
 
     def event_exists_in_database(self, event_id: int) -> bool:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return False
         collection = self.db["events"]
         return collection.find_one({"id": event_id}) is not None
 
     def add_events_to_database(self, events) -> None:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return 
         if (len(events) == 0):
-            custom_logger.warning("no events to add")
+            logger.warning("no events to add")
             return
-        custom_logger.info(f"adding {len(events)} events to database")
+        logger.info(f"adding {len(events)} events to database")
         collection = self.db["events"]
         collection.insert_many(events, ordered=False)
 
     def update_events_in_database(self, events: List[Event]) -> None:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return
         if (len(events) == 0):
-            custom_logger.warning("no events to update")
+            logger.warning("no events to update")
             return
-        custom_logger.info(f"updating {len(events)} events in database")
+        logger.info(f"updating {len(events)} events in database")
         collection = self.db["events"]
         for event in events:
             collection.replace_one({"id": event["id"]}, event)
 
     def get_all_events_from_database(self) -> List[Event]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return []
         collection = self.db["events"]
         return list(collection.find())
 
     def get_events_by_id(self, event_ids: List[int]) -> List[Event]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return []
         collection = self.db["events"]
         return list(collection.find({"id": {"$in": event_ids}}))
@@ -112,28 +112,28 @@ class Database:
 
     def subscriber_exists(self, phone_number: str, use_inactive_collection=False) -> bool:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return False
         collection = self.db["inactive_subscribers" if use_inactive_collection else "subscribers"]
         return collection.find_one({"phone_number": phone_number}) is not None
 
     def get_all_subscribers(self) -> List[Subscriber]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return []
         collection = self.db["subscribers"]
         return list(collection.find())
 
     def get_subscribers_for_ads(self) -> List[Subscriber]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return []
         collection = self.db["subscribers"]
         return list(collection.find({"should_receive_ads": True}))
 
     def add_subscriber(self, subscriber: Subscriber) -> bool:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return False
         collection = self.db["subscribers"]
         response = collection.update_one(
@@ -145,7 +145,7 @@ class Database:
 
     def re_activate_subscriber(self, phone_number: str) -> bool:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return False
         inactive_sub_collection = self.db["inactive_subscribers"]
         response = inactive_sub_collection.find_one_and_delete({"phone_number": phone_number})
@@ -157,7 +157,7 @@ class Database:
 
     def remove_subscriber(self, phone_number) -> bool:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return False
         collection = self.db["subscribers"]
         response = collection.find_one_and_delete({"phone_number": phone_number})
@@ -170,7 +170,7 @@ class Database:
     # TODO: see if we can put all this logic in a single MongoDB query, i.e. format the OW phone number in the query
     def get_ow_data_for_phone_number(self, phone_number: str) -> Optional[OWData]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return None
         collection = self.db["ow_users"]
         query = { 
@@ -189,25 +189,25 @@ class Database:
 
     def add_ow_users(self, ow_users: List[OWData]) -> None:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return
         if (len(ow_users) == 0):
-            custom_logger.warning("no ow users to add")
+            logger.warning("no ow users to add")
             return
-        custom_logger.info(f"adding {len(ow_users)} ow users to database")
+        logger.info(f"adding {len(ow_users)} ow users to database")
         collection = self.db["ow_users"]
         collection.insert_many(ow_users, ordered=False)
 
     def get_active_ads(self) -> List[Ad]:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return []
         collection = self.db["ads"]
         return list(collection.find({ "is_active": True }).sort("priority_order", 1))
 
     def add_new_ad_received(self, ad_key: str, subscriber: Subscriber) -> None:
         if not self.is_connected:
-            custom_logger.warning("not connected to database")
+            logger.warning("not connected to database")
             return
         collection = self.db["subscribers"]
         collection.update_one(

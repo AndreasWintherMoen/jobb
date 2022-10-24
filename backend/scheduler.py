@@ -4,7 +4,7 @@ from typing import Any
 from google.cloud import tasks_v2
 from google.protobuf import duration_pb2, timestamp_pb2 # type: ignore
 from config.env import SCHEDULER_LOCATION, SCHEDULER_PROJECT_ID, SCHEDULER_QUEUE, SERVICE_ACCOUNT_EMAIL, SMS_SEND_URL
-import custom_logger
+import logger
 
 from enums import MessageType
 
@@ -22,7 +22,7 @@ if not project or not queue or not location or not service_account_email or not 
 parent = client.queue_path(project, location, queue)
 
 def schedule_external_sms_sender(event_ids: list[int], message_type: MessageType, time_to_send: int) -> Any:
-    custom_logger.info("schedule_external_sms_sender...")
+    logger.info("schedule_external_sms_sender...")
     payload: Any = { 'event_ids': event_ids, 'message_type': message_type.value }
     payload = json.dumps(payload)
     converted_payload = payload.encode()
