@@ -18,3 +18,4 @@ jobs:
           secrets: ${{ secrets.google_service_account_credentials }}
           bucket: 'bedpresbot'
           exclude: '.*\.md$|\.gitignore$|\.git/.*$|\.github/.*$'
+          sync_dir: 'backend/'
