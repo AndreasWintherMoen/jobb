@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import pytz
+import pytz # type: ignore
 from config.types import EventWithAttendees, Subscriber
 
 timezone = pytz.timezone('Europe/Oslo')
