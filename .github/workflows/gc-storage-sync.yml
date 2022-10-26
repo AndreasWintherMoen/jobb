@@ -14,21 +14,55 @@ jobs:
 
       - name: Zip folder
         working-directory: backend
-        run: zip -r gc-function-source.zip ./
+        run: |
+          mv main_ad_manager.py main.py
+          zip -r admanager-function-source.zip ./
+          mv main.py main_ad_manager.py
+          mv main_scraper.py main.py
+          zip -r scraper-function-source.zip ./
+          mv main.py main_scraper.py
+          mv main_sms_sender.py main.py
+          zip -r smssender-function-source.zip ./
+          mv main.py main_sms_sender.py
+          mv main_sms_scheduler.py main.py
+          zip -r smsscheduler-function-source.zip ./
+          mv main.py main_sms_scheduler.py
 
       - name: Create zip artifact
         uses: actions/upload-artifact@v3
         with:
           name: gc-function-source.zip
-          path: backend/gc-function-source.zip
+          path: |
+            backend/admanager-function-source.zip
+            backend/scraper-function-source.zip
+            backend/smssender-function-source.zip
+            backend/smsscheduler-function-source.zip
 
       - name: GC Auth
         uses: google-github-actions/auth@v0
         with:
           credentials_json: '${{ secrets.google_service_account_credentials }}'
 
-      - name: Upload zip to GC
+      - name: Upload ad manager zip to GC
         uses: google-github-actions/upload-cloud-storage@v0
         with:
-          path: 'backend/gc-function-source.zip'
+          path: 'backend/admanager-function-source.zip'
+          destination: 'bedpresbot'
+
+      - name: Upload scraper zip to GC
+        uses: google-github-actions/upload-cloud-storage@v0
+        with:
+          path: 'backend/scraper-function-source.zip'
+          destination: 'bedpresbot'
+
+      - name: Upload sms sender zip to GC
+        uses: google-github-actions/upload-cloud-storage@v0
+        with:
+          path: 'backend/smssender-function-source.zip'
+          destination: 'bedpresbot'
+
+      - name: Upload sms scheduler zip to GC
+        uses: google-github-actions/upload-cloud-storage@v0
+        with:
+          path: 'backend/smsscheduler-function-source.zip'
           destination: 'bedpresbot'
