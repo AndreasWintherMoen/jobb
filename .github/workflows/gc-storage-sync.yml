@@ -13,15 +13,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Zip folder
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r gc-function-source.zip backend
+        working-directory: backend
+        run: zip -r gc-function-source.zip ./
 
       - name: Create zip artifact
         uses: actions/upload-artifact@v3
         with:
           name: gc-function-source.zip
-          path: gc-function-source.zip
+          path: backend/gc-function-source.zip
 
       - name: GC Auth
         uses: google-github-actions/auth@v0
@@ -31,5 +30,5 @@ jobs:
       - name: Upload zip to GC
         uses: google-github-actions/upload-cloud-storage@v0
         with:
-          path: 'gc-function-source.zip'
+          path: 'backend/gc-function-source.zip'
           destination: 'bedpresbot'
