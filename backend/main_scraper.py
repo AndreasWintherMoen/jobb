@@ -18,7 +18,7 @@ def discover_new_bedpres_and_add_to_database(data, context):
     events = get_event_list()
     total_count = len(events)
     logger.info(f"Fetched {total_count} events")
-    events = [event for event in events if is_relevant_event(event, database)]
+    events = [event for event in events if is_relevant_event(event)]
     filtered_count = len(events)
     logger.info(f"Filtered {total_count} events to {filtered_count} events")
     events = [add_registration_dates_to_event(event) for event in events]
