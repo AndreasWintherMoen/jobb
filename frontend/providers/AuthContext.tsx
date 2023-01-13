@@ -32,6 +32,7 @@ if (code_verifier !== null) {
   body.append('redirect_uri', 'http://bedpresbot.online/');
   body.append('grant_type', 'authorization_code');
   body.append('code_verifier', code_verifier);
+  body.append('code', 'code');
 
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('code_verifier');
