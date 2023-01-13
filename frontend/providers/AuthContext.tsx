@@ -19,7 +19,10 @@ export const AuthContext = createContext<IAuthContext>({
   logIn: () => {},
 });
 
-const code_verifier = localStorage?.getItem('code_verifier');
+const code_verifier =
+  typeof window !== 'undefined'
+    ? window.localStorage?.getItem('code_verifier')
+    : null;
 
 if (code_verifier !== null) {
   const url = new URL('https://old.online.ntnu.no/openid/token');
@@ -30,8 +33,10 @@ if (code_verifier !== null) {
   body.append('grant_type', 'authorization_code');
   body.append('code_verifier', code_verifier);
 
-  localStorage?.removeItem('code_verifier');
-  localStorage?.removeItem('code_challenge');
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem('code_verifier');
+    window.localStorage.removeItem('code_challenge');
+  }
 
   fetch(url.toString(), {
     method: 'POST',
@@ -41,8 +46,10 @@ if (code_verifier !== null) {
 
 function generatePkceStuff() {
   const { code_challenge, code_verifier } = pkceChallenge();
-  localStorage?.setItem('code_verifier', code_verifier);
-  localStorage?.setItem('code_challenge', code_challenge);
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('code_verifier', code_verifier);
+    window.localStorage.setItem('code_challenge', code_challenge);
+  }
   console.log(
     `Generated code_verifier: ${code_verifier} and code_challenge: ${code_challenge}`
   );
@@ -60,7 +67,10 @@ export default function AuthProvider({
     //TODO: Implement login
     console.log('logging in ');
     generatePkceStuff();
-    const code_challenge = localStorage?.getItem('code_challenge');
+    const code_challenge =
+      typeof window !== 'undefined'
+        ? window.localStorage?.getItem('code_challenge')
+        : null;
     if (!code_challenge) throw new Error('code_challenge is null');
     const url = new URL('https://old.online.ntnu.no/openid/authorize');
     url.searchParams.append('client_id', '052697');
