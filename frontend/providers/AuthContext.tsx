@@ -36,6 +36,12 @@ if (code_verifier !== null) {
   body.append('grant_type', 'authorization_code');
   body.append('code_verifier', code_verifier);
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const code = searchParams.get('code');
+  if (!code) throw new Error('code is null');
+  body.append('code', code);
+  console.log(code);
+
   console.log(window.localStorage?.getItem('code_verifier'));
   console.log(window.localStorage?.getItem('code_challenge'));
 
