@@ -28,21 +28,25 @@ if (code_verifier !== null) {
   const url = new URL('https://old.online.ntnu.no/openid/token');
 
   const body = new FormData();
+
+  console.log(window.location);
+
   body.append('client_id', '052697');
   body.append('redirect_uri', 'http://bedpresbot.online/');
   body.append('grant_type', 'authorization_code');
   body.append('code_verifier', code_verifier);
-  body.append('code', 'code');
 
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('code_verifier');
     window.localStorage.removeItem('code_challenge');
   }
 
-  fetch(url.toString(), {
+  const response = fetch(url.toString(), {
     method: 'POST',
     body,
   });
+
+  console.log(response);
 }
 
 function generatePkceStuff() {
