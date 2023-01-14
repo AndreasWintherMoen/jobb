@@ -36,17 +36,20 @@ if (code_verifier !== null) {
   body.append('grant_type', 'authorization_code');
   body.append('code_verifier', code_verifier);
 
+  console.log(window.localStorage?.getItem('code_verifier'));
+  console.log(window.localStorage?.getItem('code_challenge'));
+
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('code_verifier');
     window.localStorage.removeItem('code_challenge');
   }
 
-  const response = fetch(url.toString(), {
+  fetch(url.toString(), {
     method: 'POST',
     body,
-  });
-
-  console.log(response);
+  })
+    .then((res) => res.json())
+    .then((res) => console.log(res));
 }
 
 function generatePkceStuff() {
