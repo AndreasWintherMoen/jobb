@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import LoginButton from '../components/LoginButton';
 
 export default function Home() {
   return (
@@ -18,10 +18,7 @@ export default function Home() {
           </p>
         </div>
         <div className='p-4 flex flex-col justify-center gap-8'>
-          <button className='bg-owPrimary text-white font-bold py-2 px-4 rounded flex flex-row items-center justify-center gap-4'>
-            <Image src='/ow-icon.png' alt='Logo' width={48} height={48} />
-            <p className='md:text-3xl text-xl'>Logg Inn</p>
-          </button>
+          <LoginButton />
         </div>
       </div>
     </div>
