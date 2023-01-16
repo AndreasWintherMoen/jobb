@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import pkceChallenge from 'pkce-challenge';
 import { EnvironmentContext } from './EnvironmentContext';
 import { useQuery } from 'react-query';
@@ -139,6 +139,13 @@ export default function AuthProvider({
   const { data: jwtData } = useQuery('jwtData', requestAccessToken, {
     retry: false,
   });
+
+  useEffect(() => {
+    if (!jwtData) return;
+    if (!authCode) return;
+    if (typeof window === 'undefined') return;
+    window.location.href = 'https://bedpresbot.online/dashboard';
+  }, [jwtData, authCode]);
 
   return (
     <AuthContext.Provider

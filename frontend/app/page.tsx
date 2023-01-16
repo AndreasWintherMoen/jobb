@@ -1,6 +1,9 @@
 import LoginButton from '../components/LoginButton';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-export default function Home() {
+export default function Home({ searchParams }: any) {
+  if (!!searchParams.code) return <LoadingSpinner />;
+
   return (
     <div className='w-screen h-screen grid place-content-center'>
       <div className='flex md:flex-row flex-col justify-center md:gap-48 gap-16'>
