@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import LoginButton from '../components/LoginButton';
 import LoadingSpinner from '../components/LoadingSpinner';
 
