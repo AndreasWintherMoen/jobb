@@ -1,6 +1,9 @@
+// A context provider for environment variables exposed to the client. These are opaque to the end-user. Secret
+// environment variables such as API keys must be used in server components and accessed directly via process.env.
+
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 export interface IEnvironmentContext {
   OW_AUTHORIZE_URL: string;
