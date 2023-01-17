@@ -11,7 +11,11 @@ export default async function handler(
 
   const { authCode, codeVerifier } = req.body;
   if (!authCode || !codeVerifier) {
-    res.status(400).json({ error: 'Missing parameters' });
+    res
+      .status(400)
+      .json({
+        error: `Missing parameters. Provided authCode: ${authCode}. Provided codeVerifier: ${codeVerifier}`,
+      });
   }
 
   const data = await auth.fetchAccessToken(authCode, codeVerifier);
