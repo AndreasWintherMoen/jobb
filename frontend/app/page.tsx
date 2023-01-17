@@ -33,13 +33,15 @@ async function fetchUser(authCode?: string, codeVerifier?: string) {
   console.log('has authCode and codeVerifier. sending request...');
   await fetchAccessToken(authCode, codeVerifier);
 
-  const userInfo = await fetch('/api/auth/user', {
+  const res = await fetch('/api/auth/user', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
   });
+
+  const userInfo = await res.json();
 
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('code_verifier');
