@@ -16,6 +16,10 @@ function fetchAccessToken(authCode?: string, codeVerifier?: string) {
       authCode,
       codeVerifier,
     }),
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
   });
 }
 
@@ -29,7 +33,13 @@ async function fetchUser(authCode?: string, codeVerifier?: string) {
   console.log('has authCode and codeVerifier. sending request...');
   await fetchAccessToken(authCode, codeVerifier);
 
-  const userInfo = await fetch('/api/auth/user');
+  const userInfo = await fetch('/api/auth/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  });
 
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('code_verifier');
