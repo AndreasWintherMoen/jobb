@@ -6,8 +6,6 @@ import { useQuery } from 'react-query';
 import { redirect } from 'next/navigation';
 
 function fetchAccessToken(authCode?: string, codeVerifier?: string) {
-  console.log('fetch access token');
-
   return fetch('/api/auth/accessToken', {
     method: 'POST',
     body: JSON.stringify({
@@ -22,14 +20,10 @@ function fetchAccessToken(authCode?: string, codeVerifier?: string) {
 }
 
 async function fetchUser(authCode?: string, codeVerifier?: string) {
-  console.log('fetch user');
   if (!authCode || !codeVerifier) {
-    console.log('hello i am here');
-    console.log('no authCode or codeVerifier');
-    throw new Error('no authCode or codeVerifier');
+    throw new Error('no authCode or codeVerifier in localStorage');
   }
 
-  console.log('has authCode and codeVerifier. sending request...');
   await fetchAccessToken(authCode, codeVerifier);
 
   const res = await fetch('/api/auth/user', {
@@ -70,14 +64,9 @@ export default function RedirectPage() {
     }
   );
 
-  if (error) {
-    console.log('asdkfhasdfkjh');
-    console.error(error);
-  }
-
   useEffect(() => {
     if (error) {
-      alert('Kunne ikke logge inn.');
+      alert(`Kunne ikke logge inn.\n\n${error}`);
       redirect('/');
     }
   }, [error]);
@@ -87,15 +76,6 @@ export default function RedirectPage() {
       redirect('/dashboard');
     }
   }, [userInfo]);
-
-  if (!authCode || !codeVerifier) {
-    console.log('no authCode or codeVerifier');
-  } else {
-    console.log('authCode', authCode);
-    console.log('codeVerifier', codeVerifier);
-  }
-
-  console.log('userInfo', userInfo);
 
   return <LoadingSpinner />;
 }
