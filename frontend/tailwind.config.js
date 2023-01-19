@@ -8,11 +8,27 @@ module.exports = {
   theme: {
     colors: {
       owPrimary: '#0E5474',
-      owSecondary: '#F9B759',
-      background: '#1C1C1C',
+      owSecondary: {
+        DEFAULT: '#F9B759',
+        accent: '#EEAC4E',
+      },
+      background: {
+        DEFAULT: '#252525',
+        accent: '#2A2A2A',
+      },
       textPrimary: '#FFFFFF',
+      event: {
+        bedpres: '#EB536E',
+        kurs: '#127DBD',
+        sosialt: '#43B171',
+      },
+      transparent: 'transparent',
     },
-    extend: {},
+    extend: {
+      borderRadius: {
+        xl: '16px',
+      },
+    },
   },
   plugins: [],
 };

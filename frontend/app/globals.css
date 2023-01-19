@@ -20,6 +20,36 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   color-scheme: dark;
-  background-color: #1c1c1c;
+  background-color: #252525;
   color: #ffffff;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* Custom Tailwind CSS */
+@layer components {
+  .checkmark--bedpres {
+    @apply border-t-event-bedpres border-l-event-bedpres;
+  }
+  .checkmark--kurs {
+    @apply border-t-event-kurs border-l-event-kurs;
+  }
+  .checkmark--sosialt {
+    @apply border-t-event-sosialt border-l-event-sosialt;
+  }
+
+  .toggleBorder--bedpres {
+    @apply border-t-event-bedpres;
+  }
+  .toggleBorder--kurs {
+    @apply border-t-event-kurs;
+  }
+  .toggleBorder--sosialt {
+    @apply border-t-event-sosialt;
+  }
 }
