@@ -23,6 +23,7 @@ module.exports = {
         sosialt: '#43B171',
       },
       transparent: 'transparent',
+      error: '#CC0000',
     },
     extend: {
       borderRadius: {
