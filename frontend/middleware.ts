@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const decryptedToken = await decrypt(token.value, cryptoModule);
+    const decryptedToken = await decrypt(token.value, cryptoModule, true);
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-ow-token', decryptedToken);
     return NextResponse.next({
