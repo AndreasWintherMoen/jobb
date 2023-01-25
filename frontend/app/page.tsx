@@ -9,6 +9,7 @@ export default function Home() {
           <h1 className='md:text-6xl text-4xl font-bold text-owSecondary'>
             Bedpres Bot
           </h1>
+          <h2 className='italic'>Bedpres Bot er under utvikling...</h2>
           <p className='md:text-xl text-base md:text-left text-justify font-bold'>
             Få <span className='text-owSecondary'>varsling </span>om
             bedriftspresentasjoner og andre{' '}
