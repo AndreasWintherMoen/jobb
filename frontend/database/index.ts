@@ -30,7 +30,7 @@ class Database {
     await this.connect();
 
     const user = await Subscriber.findOne({ 'ow.id': id });
-    await this.delay(5000);
+    // await this.delay(5000);
 
     return user;
   }
