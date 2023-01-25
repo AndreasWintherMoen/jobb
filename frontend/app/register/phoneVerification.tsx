@@ -3,15 +3,24 @@
 import React, { useEffect, useState } from 'react';
 import VerificationCodeInput from '../../components/VerificationCodeInput';
 
-export default function VerifyPhonePage() {
-  const phone = '12312312'; // temporary
+export default function VerifyPhonePage({
+  phone,
+  tmpFullOwInfo,
+}: {
+  phone: string;
+  tmpFullOwInfo: any;
+}) {
+  // const phone = '12312312'; // temporary
   const [code, setCode] = useState('');
 
   const [showError, setShowError] = useState(false);
 
+  console.log(tmpFullOwInfo);
+
   useEffect(() => {
     if (code.length === 5) {
       // TODO: send code to backend and set error if code is wrong
+      // fetch('/api/verifyPhone', ...);
       setShowError(true);
     } else if (code.length > 0) {
       setShowError(false);

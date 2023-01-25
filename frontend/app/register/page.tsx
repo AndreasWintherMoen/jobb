@@ -1,26 +1,54 @@
-import EventTypeToggle from '../../components/EventTypeToggle';
+export const dynamic = 'force-dynamic';
 
-export default function RegisterPage() {
-  return (
-    <div className='w-8/12 mx-auto mt-16 p-8 flex flex-col items-center bg-background text-textPrimary rounded-lg'>
-      <h1 className='text-4xl font-bold'>Velkommen!</h1>
-      <h2 className='font-bold text-xl mb-16'>
-        Hvilke arrangementer vil du ha varsling om?
-      </h2>
-      <div className='w-full flex grow-0 p-4 gap-8'>
-        <EventTypeToggle eventType='bedpres' />
-        <EventTypeToggle eventType='kurs' />
-        <EventTypeToggle eventType='sosialt' />
+// import React, { useState } from 'react';
+import EventPreferenceSelection from './eventPreferenceSelection';
+import PhoneVerification from './phoneVerification';
+import auth from '../../auth';
+
+import { headers } from 'next/headers';
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export default async function RegisterPage(stuff: any) {
+  const nextHeaders = headers();
+  const token = nextHeaders.get('x-ow-token');
+
+  // const [step, setStep] = useState(0);
+  const step = 1;
+  console.log('page.tsx', stuff);
+
+  // await delay(5000);
+  let owUser;
+  try {
+    owUser = await auth.fetchFullProfile(token || undefined);
+  } catch (e: any) {
+    console.error(e);
+    return (
+      <div>
+        <p>No user</p>
+        <p>Caught error: {e.message}</p>
+        <p>Token: {token}</p>
       </div>
-      <p className='py-8 italic'>
-        Dette er bare en preferanse. Når du er logget kan du velge spesifikt
-        hvilke arrangementer du vil få varsling om.
-      </p>
-      <div className='flex gap-8'>
-        <button className='mt-8 bg-owSecondary text-background rounded-lg px-4 py-2 hover:bg-owSecondaryAccent'>
-          Fullfør registrering
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }
+  if (!owUser || !owUser.phone_number) {
+    return <div>no user</div>;
+  }
+
+  // const user = await database.fetchUser(1421);
+  // if (!user || !user.phone_number) {
+  //   return <div>no user</div>;
+  // }
+
+  // if (step === 0) {
+  //   return <PhoneInput />; // TODO: Implement this
+  // }
+  if (step === 1) {
+    return (
+      <PhoneVerification tmpFullOwInfo={owUser} phone={owUser.phone_number} />
+    );
+  }
+  if (step === 2) {
+    return <EventPreferenceSelection />;
+  }
 }
