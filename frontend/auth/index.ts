@@ -6,25 +6,79 @@ interface IJwtResponse {
   token_type: string;
 }
 
+interface IUserInfo {
+  sub: number;
+  name: string;
+  family_name: string;
+  given_name: string;
+  nickname: string;
+  preferred_username: string;
+  email: string;
+  email_verified: boolean;
+  picture: string;
+}
+
+interface IProfile {
+  id: number;
+  username: string;
+  nickname: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  online_mail: string;
+  address: string;
+  zip_code: string;
+  email: string;
+  website: string;
+  github: string;
+  linkedin: string;
+  ntnu_username: string;
+  field_of_study: number;
+  year: number;
+  bio: string;
+  positions: string[];
+  special_positions: string[];
+  image: string;
+  started_date: string;
+}
+
 class Auth {
   private owTokenURL: string;
   private owUserInfoURL: string;
+  private owProfileURL: string;
   private clientID: string;
   private redirectURI: string;
   private jwtData: IJwtResponse | undefined;
+  private userInfo: IUserInfo | undefined;
+  private profile: IProfile | undefined;
 
   constructor() {
-    const { OW_TOKEN_URL, CLIENT_ID, REDIRECT_URI, OW_USERINFO_URL } =
-      process.env;
-    if (!OW_TOKEN_URL || !CLIENT_ID || !REDIRECT_URI || !OW_USERINFO_URL)
+    const {
+      OW_TOKEN_URL,
+      CLIENT_ID,
+      REDIRECT_URI,
+      OW_USERINFO_URL,
+      OW_PROFILE_URL,
+    } = process.env;
+    if (
+      !OW_TOKEN_URL ||
+      !CLIENT_ID ||
+      !REDIRECT_URI ||
+      !OW_USERINFO_URL ||
+      !OW_PROFILE_URL
+    )
       throw new Error('Missing auth environment variables');
     this.owTokenURL = OW_TOKEN_URL;
     this.owUserInfoURL = OW_USERINFO_URL;
     this.clientID = CLIENT_ID;
     this.redirectURI = REDIRECT_URI;
+    this.owProfileURL = OW_PROFILE_URL;
   }
 
-  public async fetchAccessToken(authCode: string, codeVerifier: string) {
+  public async fetchAccessToken(
+    authCode: string,
+    codeVerifier: string
+  ): Promise<IJwtResponse> {
     const url = new URL(this.owTokenURL);
 
     const body = new FormData();
@@ -63,7 +117,30 @@ class Auth {
     if (!response.ok) throw new Error('Failed to fetch user');
 
     const data = await response.json();
+
+    this.userInfo = data;
+
+    return data;
+  }
+
+  public async fetchFullProfile(token?: string) {
+    if (!this.jwtData && !token)
+      throw new Error('No JWT data and no token provided');
+
+    const url = new URL(this.owProfileURL);
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${this.jwtData?.access_token || token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch user');
+
+    const data = await response.json();
     console.log(data);
+
+    this.profile = data;
 
     return data;
   }

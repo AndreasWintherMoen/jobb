@@ -3,10 +3,10 @@
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
-function fetchAccessToken(authCode?: string, codeVerifier?: string) {
-  return fetch('/api/auth/accessToken', {
+async function fetchAccessToken(authCode?: string, codeVerifier?: string) {
+  const res = await fetch('/api/auth/accessToken', {
     method: 'POST',
     body: JSON.stringify({
       authCode,
@@ -17,6 +17,14 @@ function fetchAccessToken(authCode?: string, codeVerifier?: string) {
       Accept: 'application/json',
     },
   });
+
+  const jwtData = await res.json();
+
+  if (document && jwtData && jwtData.access_token) {
+    document.cookie = `token=${jwtData.access_token};path=/`;
+  }
+
+  return jwtData;
 }
 
 async function fetchUser(authCode?: string, codeVerifier?: string) {
@@ -56,6 +64,8 @@ export default function RedirectPage() {
       : undefined
   );
 
+  const router = useRouter();
+
   const { data: userInfo, error } = useQuery(
     'userInfo',
     () => fetchUser(authCode, codeVerifier),
@@ -72,10 +82,12 @@ export default function RedirectPage() {
   }, [error]);
 
   useEffect(() => {
-    if (!!userInfo) {
-      redirect('/dashboard');
+    if (!!userInfo && router) {
+      // TODO: Redirect to register/dashboard depending on whether the user is new or not
+      router.push('/register');
+      // router.push('/dashboard');
     }
-  }, [userInfo]);
+  }, [userInfo, router]);
 
   return <LoadingSpinner />;
 }

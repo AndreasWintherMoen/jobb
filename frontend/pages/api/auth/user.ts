@@ -9,7 +9,10 @@ export default async function handler(
     res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const data = await auth.fetchUser();
-
-  res.status(200).json(data);
+  try {
+    const data = await auth.fetchUser();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
