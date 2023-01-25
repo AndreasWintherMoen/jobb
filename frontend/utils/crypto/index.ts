@@ -109,8 +109,6 @@ export async function encrypt(
     key,
     encoded
   );
-  console.log('cipher', cipher);
-  console.log('iv', iv);
   return stringifyEncrypted({ cipher, iv }, !!isEdgeRuntime);
 }
 
@@ -121,8 +119,6 @@ export async function decrypt(
 ): Promise<string> {
   const encryptedMessage = parseEncrypted(encryptedString, !!isEdgeRuntime);
   const { cipher, iv } = encryptedMessage;
-  console.log('cipher', cipher);
-  console.log('iv', iv);
   const key = await generateCryptoKey(crypto);
   const encoded = await cryptoModule.subtle.decrypt(
     {
