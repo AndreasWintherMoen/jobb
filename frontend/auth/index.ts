@@ -1,3 +1,5 @@
+import { parseJWTPayload, verifyOWJwtSignature } from '../utils/crypto';
+
 interface IJwtResponse {
   access_token: string;
   expires_in: number;
@@ -144,6 +146,30 @@ class Auth {
 
     return data;
   }
+}
+
+export async function verifyJwt(
+  token: string,
+  cryptoModule: Crypto,
+  expirationTime: number
+): Promise<boolean> {
+  // 1. Verify signature
+  const isValidSignature = await verifyOWJwtSignature(token, cryptoModule);
+  if (!isValidSignature) return false;
+
+  // 2. Verify audience
+  const jwtPayload = parseJWTPayload(token);
+  const isValidAudience = jwtPayload.aud === process.env.CLIENT_ID;
+  if (!isValidAudience) return false;
+
+  // 3. Verify issued at
+  const currentTimestamp = Date.now() / 1000;
+  const isValidIssuedAt =
+    jwtPayload.iat > Math.floor(currentTimestamp - expirationTime) &&
+    jwtPayload.iat < Math.floor(currentTimestamp);
+  if (!isValidIssuedAt) return false;
+
+  return true;
 }
 
 const auth = new Auth();
