@@ -4,6 +4,7 @@ import LoadingSpinner from '../../../components/LoadingSpinner';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { redirect, useRouter } from 'next/navigation';
+import { IJwtResponse } from '../../../auth/types';
 
 async function fetchAccessToken(authCode?: string, codeVerifier?: string) {
   const res = await fetch('/api/auth/accessToken', {
@@ -18,10 +19,11 @@ async function fetchAccessToken(authCode?: string, codeVerifier?: string) {
     },
   });
 
-  const jwtData = await res.json();
+  const jwtData = (await res.json()) as IJwtResponse;
 
-  if (document && jwtData && jwtData.access_token) {
-    document.cookie = `token=${jwtData.access_token};path=/`;
+  if (document && jwtData && jwtData.access_token && jwtData.refresh_token) {
+    document.cookie = `access_token=${jwtData.access_token};path=/`;
+    document.cookie = `refresh_token=${jwtData.refresh_token};path=/`;
   }
 
   return jwtData;
