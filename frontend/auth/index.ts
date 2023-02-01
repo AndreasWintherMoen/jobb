@@ -63,6 +63,32 @@ class Auth {
     return data;
   }
 
+  public async refreshAccessToken(): Promise<IJwtResponse> {
+    if (!this.jwtData) throw new Error('No JWT data');
+
+    const url = new URL(this.owTokenURL);
+
+    const body = new FormData();
+
+    body.append('client_id', this.clientID);
+    body.append('redirect_uri', this.redirectURI);
+    body.append('grant_type', 'refresh_token');
+    body.append('refresh_token', this.jwtData?.refresh_token);
+
+    const response = await fetch(url.toString(), {
+      method: 'POST',
+      body,
+    });
+    if (!response.ok) throw new Error('Failed to fetch access token');
+
+    const data = await response.json();
+
+    this.jwtData = data;
+
+    console.log(data);
+    return data;
+  }
+
   public async fetchUser() {
     if (!this.jwtData) throw new Error('No JWT data');
 
