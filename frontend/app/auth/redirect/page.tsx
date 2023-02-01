@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { redirect, useRouter } from 'next/navigation';
 import { IJwtResponse } from '../../../auth/types';
 
-async function fetchAccessToken(authCode?: string, codeVerifier?: string) {
+async function fetchAccessToken(authCode: string, codeVerifier: string) {
   const res = await fetch('/api/auth/accessToken', {
     method: 'POST',
     body: JSON.stringify({
