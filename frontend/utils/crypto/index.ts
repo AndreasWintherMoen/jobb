@@ -1,7 +1,4 @@
-interface IEncrypted {
-  cipher: ArrayBuffer;
-  iv: Uint8Array;
-}
+import { IEncrypted, IJwk, IJWTPayload } from './types';
 
 const ivLength = 12;
 const secretKeyString = process.env.ENCRYPTION_KEY;
