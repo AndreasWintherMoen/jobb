@@ -6,9 +6,11 @@ import VerificationCodeInput from '../../components/VerificationCodeInput';
 export default function VerifyPhonePage({
   phone,
   tmpFullOwInfo,
+  onSuccess,
 }: {
   phone: string;
   tmpFullOwInfo: any;
+  onSuccess: () => void;
 }) {
   // const phone = '12312312'; // temporary
   const [code, setCode] = useState('');
@@ -21,7 +23,7 @@ export default function VerifyPhonePage({
     if (code.length === 5) {
       // TODO: send code to backend and set error if code is wrong
       // fetch('/api/verifyPhone', ...);
-      setShowError(true);
+      Math.random() < 0.5 ? setShowError(true) : onSuccess();
     } else if (code.length > 0) {
       setShowError(false);
     }
