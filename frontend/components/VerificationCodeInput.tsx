@@ -45,7 +45,12 @@ export default function VerificationCodeInput({
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value.length > 1) {
-      if (!error) return;
+      if (!error) {
+        const filteredValue = value.replace(/[^0-9]/g, '');
+        const newCode = code + filteredValue;
+        onChangeCode(newCode);
+        return;
+      }
       onChangeCode(value.charAt(value.length - 1));
       inputRef.current.forEach((input) => {
         if (input && input) input.value = '';
