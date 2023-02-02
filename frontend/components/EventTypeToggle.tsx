@@ -14,10 +14,12 @@ export default function EventToggle({ eventType }: { eventType: EventType }) {
   };
 
   return (
-    <Border eventType={eventType} isToggled={isToggled} toggle={toggle}>
-      {isToggled && <CheckMark eventType={eventType} />}
-      <Content eventType={eventType} />
-    </Border>
+    <div className='w-full md:basis-1/3 max-w-sm self-center rounded-lg'>
+      <Border eventType={eventType} isToggled={isToggled} toggle={toggle}>
+        {isToggled && <CheckMark eventType={eventType} />}
+        <Content eventType={eventType} />
+      </Border>
+    </div>
   );
 }
 
@@ -37,10 +39,10 @@ function Content({ eventType }: { eventType: EventType }) {
   };
   return (
     <>
-      <h3 className='text-owSecondary font-bold select-none mt-6 text-xl p-2 text-center rounded-md'>
+      <h3 className='text-owSecondary font-bold select-none my-6 text-xl p-2 text-center rounded-md'>
         {eventTypeToTitle[eventType]}
       </h3>
-      <p className='font-bold select-none px-4 py-8'>
+      <p className='hidden md:block md:font-bold text-sm md:text-base select-none px-2 md:px-4 pt-2 pb-8'>
         {eventTypeToDescription[eventType]}
       </p>
     </>
@@ -87,10 +89,10 @@ function Border({
   };
   let styling = '';
   if (isToggled)
-    styling = `${eventTypeToBorderStyle[eventType]} bg-background-accent overflow-hidden cursor-pointer box-border basis-1/3 border-4 border-opacity-100 rounded-lg`;
+    styling = `${eventTypeToBorderStyle[eventType]} bg-background-accent overflow-hidden cursor-pointer box-border border-4 border-opacity-100`;
   else
     styling =
-      'bg-background-accent overflow-hidden cursor-pointer box-border basis-1/3 border-4 border-background border-opacity-0 rounded-lg';
+      'bg-background-accent overflow-hidden cursor-pointer border-4 border-background border-opacity-0 box-border';
   return (
     <div onClick={toggle} className={styling}>
       {children}
