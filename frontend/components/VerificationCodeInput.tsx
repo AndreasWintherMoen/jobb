@@ -67,7 +67,7 @@ export default function VerificationCodeInput({
         animate={errorAnimationControls}
         initial={false}
         transition={{ duration: 0.2 }}
-        className='w-screen flex justify-center grow-0 pt-4 gap-2 md:gap-8 p-4 md:px-8'
+        className='w-full flex justify-center grow-0 pt-4 gap-2 md:gap-8 p-4 md:px-8'
       >
         <SingleNumberInput
           index={0}
@@ -128,14 +128,12 @@ function SingleNumberInput({
   error,
 }: any) {
   return (
-    <div
-      className={`flex-grow md:w-16 h-16 md:h-24 ${
-        error ? 'border-error outline-0' : 'border-textPrimary'
-      }`}
-    >
+    <div className='grow md:grow-0 md:w-16 h-16 md:h-24 }'>
       <input
         type='text'
-        className='w-full h-full text-4xl md:text-6xl text-center p-1 md:p-2 rounded-lg border-2 '
+        className={`w-full h-full text-4xl md:text-6xl text-center p-1 md:p-2 rounded-lg border-2 ${
+          error ? 'border-error outline-0' : 'border-textPrimary'
+        }`}
         ref={(el) => (inputRef.current[index] = el)}
         onChange={onChange}
         onKeyDown={onKeyDown}

@@ -17,17 +17,25 @@ export default function VerifyPhonePage({
 
   const [showError, setShowError] = useState(false);
 
+  const [attempts, setAttempts] = useState(0);
+
   console.log(tmpFullOwInfo);
 
   useEffect(() => {
     if (code.length === 5) {
       // TODO: send code to backend and set error if code is wrong
       // fetch('/api/verifyPhone', ...);
-      Math.random() < 0.5 ? setShowError(true) : onSuccess();
+      // setShowError(true);
+      if (attempts >= 1) {
+        onSuccess();
+      } else {
+        setShowError(true);
+        setAttempts(attempts + 1);
+      }
     } else if (code.length > 0) {
       setShowError(false);
     }
-  }, [code]);
+  }, [code, onSuccess, setAttempts, setShowError]);
 
   return (
     <div className='w-screen md:w-8/12 mx-auto mt-16 p-4 md:p-8 flex flex-col items-center bg-background text-textPrimary rounded-lg'>
