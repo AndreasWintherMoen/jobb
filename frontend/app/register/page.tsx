@@ -14,7 +14,7 @@ export default async function RegisterPage(stuff: any) {
   const token = nextHeaders.get('x-ow-token');
 
   // const [step, setStep] = useState(0);
-  const step = 1;
+  let step = 1;
   console.log('page.tsx', stuff);
 
   // await delay(5000);
@@ -45,7 +45,11 @@ export default async function RegisterPage(stuff: any) {
   // }
   if (step === 1) {
     return (
-      <PhoneVerification tmpFullOwInfo={owUser} phone={owUser.phone_number} />
+      <PhoneVerification
+        tmpFullOwInfo={owUser}
+        phone={owUser.phone_number}
+        onSuccess={() => (step = 2)}
+      />
     );
   }
   if (step === 2) {
