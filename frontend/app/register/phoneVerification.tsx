@@ -5,37 +5,26 @@ import VerificationCodeInput from '../../components/VerificationCodeInput';
 
 export default function VerifyPhonePage({
   phone,
-  tmpFullOwInfo,
   onSuccess,
 }: {
   phone: string;
-  tmpFullOwInfo: any;
   onSuccess: () => void;
 }) {
-  // const phone = '12312312'; // temporary
   const [code, setCode] = useState('');
 
   const [showError, setShowError] = useState(false);
 
-  const [attempts, setAttempts] = useState(0);
-
-  console.log(tmpFullOwInfo);
-
   useEffect(() => {
     if (code.length === 5) {
-      // TODO: send code to backend and set error if code is wrong
-      // fetch('/api/verifyPhone', ...);
-      // setShowError(true);
-      if (attempts >= 1) {
-        onSuccess();
-      } else {
-        setShowError(true);
-        setAttempts(attempts + 1);
-      }
+      submitVerificationCode()
+        .then(onSuccess)
+        .catch(() => setShowError(true));
     } else if (code.length > 0) {
       setShowError(false);
+    } else {
+      setCode(code.slice(0, 5));
     }
-  }, [code, onSuccess, setAttempts, setShowError]);
+  }, [code, onSuccess, setShowError]);
 
   return (
     <div className='w-screen md:w-8/12 mx-auto mt-16 p-4 md:p-8 flex flex-col items-center bg-background text-textPrimary rounded-lg'>
@@ -53,3 +42,6 @@ export default function VerifyPhonePage({
     </div>
   );
 }
+
+// TODO: Implement this
+async function submitVerificationCode() {}
