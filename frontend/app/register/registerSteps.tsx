@@ -9,7 +9,7 @@ export default function RegisterSteps({ owUser }: any) {
   const [step, setStep] = useState(1);
 
   useQuery('sendPhoneVerification', () =>
-    fetch('/api/sms/verification', {
+    fetch('/api/sms/otp/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,3 @@
-// This file is very temporary and will be replaced with a more robust solution
-// I wanted to make a quick and dirty solution to get the app working for bedcrawl
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import Twilio from 'twilio';
 
