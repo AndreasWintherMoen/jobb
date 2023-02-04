@@ -182,7 +182,7 @@ export async function decrypt(
 ): Promise<string> {
   const encryptedMessage = parseEncrypted(encryptedString, !!isEdgeRuntime);
   const { cipher, iv } = encryptedMessage;
-  const key = await generateEncryptionKey(crypto);
+  const key = await generateEncryptionKey(cryptoModule);
   const encoded = await cryptoModule.subtle.decrypt(
     {
       name: 'AES-GCM',
