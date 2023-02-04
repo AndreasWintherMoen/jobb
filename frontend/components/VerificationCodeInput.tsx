@@ -8,7 +8,7 @@ export default function VerificationCodeInput({
   code,
   onChangeCode,
 }: {
-  error: boolean;
+  error: string | null;
   code: string;
   onChangeCode: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -117,7 +117,7 @@ export default function VerificationCodeInput({
       </motion.div>
       {error && (
         <p className='py-8 italic text-error'>
-          Koden du skrev inn er feil. Vennligst prøv igjen.
+          {error ?? 'Koden du skrev inn er feil. Vennligst prøv igjen.'}
         </p>
       )}
     </>
