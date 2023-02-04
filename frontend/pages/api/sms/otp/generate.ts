@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Twilio from 'twilio';
+import { generateEncryptedOtp } from '../../../../utils/otp';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -36,17 +37,17 @@ export default async function handler(
     return res.status(400).json({ error: 'Invalid phone number' });
   }
 
-  const paddedPhoneNumber = `+47${phoneNumber}`;
+  const paddedPhoneNumber = phoneNumber.includes('+')
+    ? phoneNumber
+    : `+47${phoneNumber}`;
 
-  const response = await twilio.messages
-    .create({
-      to: paddedPhoneNumber,
-      from: sender,
-      // This is obviously a temporary solution.
-      // TODO: Implement verification code generation and checking, probably using crypto module
-      body: '98172 is your pass code for Bedpres Bot',
-    })
-    .then((message: any) => message.sid);
+  const { cipher, code } = await generateEncryptedOtp(phoneNumber);
 
-  return res.status(200).json({ response });
+  await twilio.messages.create({
+    to: paddedPhoneNumber,
+    from: sender,
+    body: `${code} er din kode for Bedpres Bot`,
+  });
+
+  return res.status(200).json({ cipher });
 }
