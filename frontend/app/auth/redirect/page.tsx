@@ -84,8 +84,8 @@ export default function RedirectPage() {
   useEffect(() => {
     if (!!userInfo && router) {
       // TODO: Redirect to register/dashboard depending on whether the user is new or not
-      router.push('/register');
-      // router.push('/dashboard');
+      // router.push('/register');
+      router.push('/dashboard');
     }
   }, [userInfo, router]);
 
