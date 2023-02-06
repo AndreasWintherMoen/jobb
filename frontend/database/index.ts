@@ -1,5 +1,6 @@
 import mongoose, { Mongoose } from 'mongoose';
-import Subscriber from './models/Subscriber';
+import Subscriber, { ISubscriber } from './models/Subscriber';
+import Event, { IEvent } from './models/Event';
 
 class Database {
   private connectionURI: string;
@@ -13,7 +14,7 @@ class Database {
     this.connectionURI = MONGODB_URI;
   }
 
-  private async connect() {
+  private async connect(): Promise<Mongoose> {
     if (this.connection) return this.connection;
 
     console.log('Connecting to database...');
@@ -22,17 +23,30 @@ class Database {
     return connection;
   }
 
-  private async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  public async fetchUser(id: number) {
+  public async fetchUser(id: number): Promise<ISubscriber | null> {
     await this.connect();
 
-    const user = await Subscriber.findOne({ 'ow.id': id });
-    // await this.delay(5000);
+    const user = (await Subscriber.findOne({ 'ow.id': id }).populate<{
+      ow: 'OWData';
+    }>('ow')) as ISubscriber | null;
+
+    if (user === null || typeof user.ow === 'string') return null;
 
     return user;
+  }
+
+  public async fetchEvents(): Promise<IEvent[]> {
+    await this.connect();
+
+    const currentTime = new Date();
+
+    const events = await Event.find({
+      start_date: { $gte: currentTime.toISOString() },
+    }).sort({
+      start_date: 1,
+    });
+
+    return events;
   }
 }
 
