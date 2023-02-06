@@ -17,7 +17,7 @@ export default function EventToggle({ eventType }: { eventType: EventType }) {
   };
 
   return (
-    <div className='w-full md:basis-1/3 max-w-sm self-center rounded-lg'>
+    <div className='w-full md:basis-1/3 max-w-sm rounded-lg'>
       <Border eventType={eventType} isToggled={isToggled} toggle={toggle}>
         {isToggled && <CheckMark eventType={eventType} />}
         <Content eventType={eventType} />
@@ -95,10 +95,10 @@ function Border({
   };
   let styling = '';
   if (isToggled)
-    styling = `${eventTypeToBorderStyle[eventType]} bg-background-accent overflow-hidden cursor-pointer box-border border-4 border-opacity-100`;
+    styling = `${eventTypeToBorderStyle[eventType]} h-full bg-background-accent cursor-pointer border-4 border-opacity-100`;
   else
     styling =
-      'bg-background-accent overflow-hidden cursor-pointer border-4 border-background border-opacity-0 box-border';
+      'h-full bg-background-accent cursor-pointer border-4 border-background border-opacity-0';
   return (
     <div onClick={toggle} className={styling}>
       {children}

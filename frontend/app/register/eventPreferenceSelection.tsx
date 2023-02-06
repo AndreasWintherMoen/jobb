@@ -9,7 +9,7 @@ export default function EventPreferenceSelectionPage() {
       <h2 className='md:font-bold text-lg md:text-xl mb-4 md:mb-16'>
         Hvilke arrangementer vil du varsles om?
       </h2>
-      <div className='w-full flex flex-col lg:flex-row grow-0 p-2 md:p-4 gap-2 md:gap-8'>
+      <div className='w-full flex flex-col lg:flex-row lg:items-stretch grow-0 p-2 md:p-4 gap-2 md:gap-8'>
         <EventTypeToggle eventType='bedpres' />
         <EventTypeToggle eventType='kurs' />
         <EventTypeToggle eventType='sosialt' />
