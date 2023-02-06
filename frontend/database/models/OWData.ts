@@ -1,6 +1,6 @@
 import mongoose, { mongo } from 'mongoose';
 
-const OWDataSchema = new mongoose.Schema({
+export const OWDataSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.String,
     unique: true,

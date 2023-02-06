@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IOWData } from './OWData';
+import { IOWData, OWDataSchema } from './OWData';
 
 const SubscriberSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.String, unique: true, required: true },
@@ -8,7 +8,7 @@ const SubscriberSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  ow: { type: mongoose.Schema.Types.ObjectId, ref: 'OWData', required: true },
+  ow: { type: OWDataSchema, ref: 'OWData', required: true },
   should_receive_ads: { type: mongoose.Schema.Types.Boolean, required: true },
   ads_received: { type: [mongoose.Schema.Types.String], required: true },
 });

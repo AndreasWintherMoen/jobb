@@ -26,9 +26,9 @@ class Database {
   public async fetchUser(id: number): Promise<ISubscriber | null> {
     await this.connect();
 
-    const user = (await Subscriber.findOne({ 'ow.id': id }).populate<{
-      ow: 'OWData';
-    }>('ow')) as ISubscriber | null;
+    const user = (await Subscriber.findOne({
+      'ow.id': id,
+    })) as ISubscriber | null;
 
     if (user === null || typeof user.ow === 'string') return null;
 
