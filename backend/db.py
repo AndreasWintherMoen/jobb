@@ -71,7 +71,7 @@ class Database:
         if (len(events) == 0):
             logger.warning("no events to add")
             return
-        logger.info(f"adding {len(events)} events to database")
+        logger.info(f"adding {len(events)} events to database with event IDs: {', '.join([str(event['id']) for event in events])}")
         collection = self.db["events"]
         collection.insert_many(events, ordered=False)
 
@@ -82,7 +82,7 @@ class Database:
         if (len(events) == 0):
             logger.warning("no events to update")
             return
-        logger.info(f"updating {len(events)} events in database")
+        logger.info(f"updating {len(events)} events in database with event IDs: {', '.join([str(event['id']) for event in events])}")
         collection = self.db["events"]
         for event in events:
             collection.replace_one({"id": event["id"]}, event)
