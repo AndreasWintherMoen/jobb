@@ -19,12 +19,18 @@ def get_event_list() -> List[Event]:
         logger.error('Failed to fetch events from OW')
         return []
 
-def event_is_in_the_future(event_id: int) -> bool:
+def event_is_in_the_future(event: Event) -> bool:
     try:
+        event_id = event['id']
+        start_date = event['start_date']
         response = get(f'https://old.online.ntnu.no/api/v1/event/attendance-events/{event_id}/?format=json', timeout=30)
         data = response.json()
         registration_start = data['registration_start']
-        return registration_start is not None and date_is_in_the_future(registration_start)
+        if registration_start is None or not date_is_in_the_future(registration_start):
+            return False
+        if start_date is None or not date_is_in_the_future(start_date):
+            return False
+        return True
     except:
         logger.error(f'Failed to fetch event {event_id} from OW')
         return False

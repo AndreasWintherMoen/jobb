@@ -7,7 +7,7 @@ def is_relevant_event(event: Event) -> bool:
     logger.info(f"Analyzing event [{event['id']}] {event['title']}...")
     if event['is_attendance_event'] == False:
         return False
-    if not event_is_in_the_future(event['id']):
+    if not event_is_in_the_future(event):
         return False
     return True
 
