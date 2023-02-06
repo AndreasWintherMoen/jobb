@@ -1,35 +1,24 @@
 import mongoose from 'mongoose';
-import OWData from './OWData';
+import { IOWData } from './OWData';
 
 const SubscriberSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  phone_number: mongoose.Schema.Types.String,
-  ow: {
-    _id: mongoose.Schema.Types.ObjectId,
-    id: mongoose.Schema.Types.Number,
-    username: mongoose.Schema.Types.String,
-    nickname: mongoose.Schema.Types.String,
-    first_name: mongoose.Schema.Types.String,
-    last_name: mongoose.Schema.Types.String,
-    phone_number: mongoose.Schema.Types.String,
-    online_mail: mongoose.Schema.Types.String,
-    address: mongoose.Schema.Types.String,
-    zip_code: mongoose.Schema.Types.String,
-    email: mongoose.Schema.Types.String,
-    website: mongoose.Schema.Types.String,
-    github: mongoose.Schema.Types.String,
-    linkedin: mongoose.Schema.Types.String,
-    ntnu_username: mongoose.Schema.Types.String,
-    field_of_study: mongoose.Schema.Types.Number,
-    year: mongoose.Schema.Types.Number,
-    bio: mongoose.Schema.Types.String,
-    positions: mongoose.Schema.Types.Array,
-    special_positions: mongoose.Schema.Types.Array,
-    image: mongoose.Schema.Types.String,
-    started_date: mongoose.Schema.Types.String,
+  _id: { type: mongoose.Schema.Types.String, unique: true, required: true },
+  phone_number: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
   },
-  should_receive_ads: mongoose.Schema.Types.Boolean,
-  ads_received: mongoose.Schema.Types.Array,
+  ow: { type: mongoose.Schema.Types.ObjectId, ref: 'OWData', required: true },
+  should_receive_ads: { type: mongoose.Schema.Types.Boolean, required: true },
+  ads_received: { type: [mongoose.Schema.Types.String], required: true },
 });
+
+export interface ISubscriber {
+  _id: string;
+  phone_number: string;
+  ow: IOWData;
+  should_receive_ads: boolean;
+  ads_received: string[];
+}
 
 export default mongoose.model('Subscriber', SubscriberSchema);
