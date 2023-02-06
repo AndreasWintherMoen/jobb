@@ -2,6 +2,9 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
+import BedpresIcon from './icons/BedpresIcon';
+import KursIcon from './icons/KursIcon';
+import SosialtIcon from './icons/SosialtIcon';
 
 // TODO: Consider moving this type definition somewhere else
 type EventType = 'bedpres' | 'kurs' | 'sosialt';
@@ -39,10 +42,13 @@ function Content({ eventType }: { eventType: EventType }) {
   };
   return (
     <>
-      <h3 className='text-owSecondary font-bold select-none my-6 text-xl p-2 text-center rounded-md'>
+      <h3 className='text-owSecondary font-bold select-none mt-4 md:mt-6 text-xl p-1 md:p-2 text-center rounded-md'>
         {eventTypeToTitle[eventType]}
       </h3>
-      <p className='hidden md:block md:font-bold text-sm md:text-base select-none px-2 md:px-4 pt-2 pb-8'>
+      <div className='flex justify-center mb-3 md:mb-4'>
+        {eventTypeToIcon(eventType)}
+      </div>
+      <p className='hidden md:block font-bold text-base select-none px-4 pt-2 pb-8 text-center'>
         {eventTypeToDescription[eventType]}
       </p>
     </>
@@ -98,4 +104,13 @@ function Border({
       {children}
     </div>
   );
+}
+
+function eventTypeToIcon(eventType: EventType) {
+  if (eventType === 'bedpres')
+    return <BedpresIcon color='#F9B759' width={36} height={36} />;
+  if (eventType === 'kurs')
+    return <KursIcon color='#F9B759' width={36} height={36} />;
+  if (eventType === 'sosialt')
+    return <SosialtIcon color='#F9B759' width={36} height={36} />;
 }
