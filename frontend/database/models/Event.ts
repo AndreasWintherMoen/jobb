@@ -16,7 +16,7 @@ const EventSchema = new mongoose.Schema({
   start_date: { type: mongoose.Schema.Types.String, required: true },
   end_date: { type: mongoose.Schema.Types.String, required: true },
   location: { type: mongoose.Schema.Types.String, required: true },
-  event_type: { type: mongoose.Schema.Types.String, required: true },
+  event_type: { type: mongoose.Schema.Types.Number, required: true },
   event_type_display: { type: mongoose.Schema.Types.String, required: true },
   organizer: mongoose.Schema.Types.Number,
   images: [mongoose.Schema.Types.String],
@@ -40,7 +40,7 @@ export interface IEvent {
   start_date: string;
   end_date: string;
   location: string;
-  event_type: string;
+  event_type: number;
   event_type_display: string;
   organizer?: number;
   images?: string[];
