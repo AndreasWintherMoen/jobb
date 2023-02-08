@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { IOWData, OWDataSchema } from './OWData';
 
 const SubscriberSchema = new mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.String, unique: true, required: true },
+  _id: { type: mongoose.Schema.Types.ObjectId },
   phone_number: {
     type: mongoose.Schema.Types.String,
     unique: true,
@@ -14,7 +14,7 @@ const SubscriberSchema = new mongoose.Schema({
 });
 
 export interface ISubscriber {
-  _id: string;
+  _id?: mongoose.Types.ObjectId;
   phone_number: string;
   ow: IOWData;
   should_receive_ads: boolean;

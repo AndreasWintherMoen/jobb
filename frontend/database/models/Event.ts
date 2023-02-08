@@ -1,12 +1,8 @@
 import mongoose from 'mongoose';
+import { EventIndex } from '../../utils/events/types';
 
 const EventSchema = new mongoose.Schema({
-  _id: {
-    type: mongoose.Schema.Types.String,
-    unique: true,
-    required: true,
-    index: true,
-  },
+  _id: { type: mongoose.Schema.Types.ObjectId },
   id: { type: mongoose.Schema.Types.Number, unique: true, required: true },
   title: { type: mongoose.Schema.Types.String, required: true },
   slug: { type: mongoose.Schema.Types.String, required: true },
@@ -30,7 +26,7 @@ const EventSchema = new mongoose.Schema({
 });
 
 export interface IEvent {
-  _id: string;
+  _id?: mongoose.Types.ObjectId;
   id: number;
   title: string;
   slug: string;
@@ -40,7 +36,7 @@ export interface IEvent {
   start_date: string;
   end_date: string;
   location: string;
-  event_type: number;
+  event_type: EventIndex;
   event_type_display: string;
   organizer?: number;
   images?: string[];

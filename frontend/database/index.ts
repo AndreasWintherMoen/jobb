@@ -28,7 +28,9 @@ class Database {
 
     const user = (await Subscriber.findOne({
       'ow.id': id,
-    })) as ISubscriber | null;
+    })
+      .select('-id')
+      .lean()) as ISubscriber | null;
 
     if (user === null || typeof user.ow === 'string') return null;
 
@@ -40,11 +42,14 @@ class Database {
 
     const currentTime = new Date();
 
-    const events = await Event.find({
+    const events = (await Event.find({
       start_date: { $gte: currentTime.toISOString() },
-    }).sort({
-      start_date: 1,
-    });
+    })
+      .sort({
+        start_date: 1,
+      })
+      .select('-_id')
+      .lean()) as IEvent[];
 
     return events;
   }

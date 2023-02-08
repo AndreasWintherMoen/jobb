@@ -47,7 +47,7 @@ export const OWDataSchema = new mongoose.Schema({
 });
 
 export interface IOWData {
-  _id: string;
+  _id?: string;
   id: number;
   username: string;
   nickname?: string;

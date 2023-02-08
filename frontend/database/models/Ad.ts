@@ -14,7 +14,7 @@ const AdSchema = new mongoose.Schema({
 });
 
 export interface IAd {
-  _id: string;
+  _id?: string;
   key: string;
   text: string;
   is_active: boolean;
