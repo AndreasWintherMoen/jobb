@@ -32,11 +32,11 @@ def event_is_in_the_future(event: Event) -> bool:
             return False
         data = response.json()
         registration_start = data['registration_start']
-        if registration_start is None or not date_is_in_the_future(registration_start):
-            return False
-        if start_date is None or not date_is_in_the_future(start_date):
-            return False
-        return True
+        if registration_start is not None and date_is_in_the_future(registration_start):
+            return True
+        if start_date is not None and date_is_in_the_future(start_date):
+            return True
+        return False
     except:
         logger.error(f'Failed to fetch event {event_id} from OW')
         return False
