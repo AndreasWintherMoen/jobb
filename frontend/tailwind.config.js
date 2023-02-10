@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -13,10 +16,13 @@ module.exports = {
         accent: '#EEAC4E',
       },
       background: {
-        DEFAULT: '#252525',
-        accent: '#2A2A2A',
+        DEFAULT: '#1F1F1F',
+        accent: '#252525',
+        light: '#2C2C2C',
+        dark: '#191919',
       },
       textPrimary: '#FFFFFF',
+      textAccent: '#BDBDBD',
       event: {
         bedpres: '#EB536E',
         kurs: '#127DBD',
@@ -24,6 +30,7 @@ module.exports = {
       },
       transparent: 'transparent',
       error: '#CC0000',
+      ...colors,
     },
     extend: {
       borderRadius: {
