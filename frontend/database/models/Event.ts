@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { EventIndex } from '../../utils/events/types';
+import { IImage, ImageSchema } from './Image';
 
 const EventSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId },
@@ -15,7 +16,7 @@ const EventSchema = new mongoose.Schema({
   event_type: { type: mongoose.Schema.Types.Number, required: true },
   event_type_display: { type: mongoose.Schema.Types.String, required: true },
   organizer: mongoose.Schema.Types.Number,
-  images: [mongoose.Schema.Types.String],
+  images: [ImageSchema],
   companies: [mongoose.Schema.Types.String],
   is_attendance_event: { type: mongoose.Schema.Types.Boolean, required: true },
   max_capacity: { type: mongoose.Schema.Types.Number, required: true },
@@ -39,7 +40,7 @@ export interface IEvent {
   event_type: EventIndex;
   event_type_display: string;
   organizer?: number;
-  images?: string[];
+  images?: IImage[];
   companies?: string[];
   is_attendance_event: boolean;
   max_capacity: number;
