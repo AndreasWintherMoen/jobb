@@ -24,6 +24,8 @@ const EventSchema = new mongoose.Schema({
   registration_start: { type: mongoose.Schema.Types.String, required: true },
   registration_end: { type: mongoose.Schema.Types.String, required: true },
   unattend_deadline: { type: mongoose.Schema.Types.String, required: true },
+  number_on_waitlist: mongoose.Schema.Types.Number,
+  rule_bundle: { type: [mongoose.Schema.Types.Number], required: true },
 });
 
 export interface IEvent {
@@ -48,6 +50,8 @@ export interface IEvent {
   registration_start: string;
   registration_end: string;
   unattend_deadline: string;
+  number_on_waitlist?: number;
+  rule_bundle: number[];
 }
 
 export default mongoose.model('Event', EventSchema);
