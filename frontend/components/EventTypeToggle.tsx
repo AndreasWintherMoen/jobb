@@ -2,12 +2,8 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
-import BedpresIcon from './icons/BedpresIcon';
-import KursIcon from './icons/KursIcon';
-import SosialtIcon from './icons/SosialtIcon';
-
-// TODO: Consider moving this type definition somewhere else
-type EventType = 'bedpres' | 'kurs' | 'sosialt';
+import eventTypeToIcon from '../utils/events/eventTypeToIcon';
+import { EventType } from '../utils/events/types';
 
 export default function EventToggle({ eventType }: { eventType: EventType }) {
   const [isToggled, setIsToggled] = useState(true);
@@ -104,13 +100,4 @@ function Border({
       {children}
     </div>
   );
-}
-
-function eventTypeToIcon(eventType: EventType) {
-  if (eventType === 'bedpres')
-    return <BedpresIcon color='#F9B759' width={36} height={36} />;
-  if (eventType === 'kurs')
-    return <KursIcon color='#F9B759' width={36} height={36} />;
-  if (eventType === 'sosialt')
-    return <SosialtIcon color='#F9B759' width={36} height={36} />;
 }
