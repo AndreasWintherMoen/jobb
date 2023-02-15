@@ -4,6 +4,7 @@ import Subscriber from './models/Subscriber';
 class Database {
   private connectionURI: string;
   private connection: Mongoose | undefined;
+  private connectingAttempt: Promise<Mongoose> | undefined;
 
   constructor() {
     const { MONGODB_URI } = process.env;
@@ -13,12 +14,18 @@ class Database {
     this.connectionURI = MONGODB_URI;
   }
 
-  private async connect() {
+  private async connect(): Promise<Mongoose> {
     if (this.connection) return this.connection;
+    if (this.connectingAttempt) {
+      // we're already connecting, so wait for that to finish instead of starting a new connection
+      return this.connectingAttempt;
+    }
 
     console.log('Connecting to database...');
-    const connection = await mongoose.connect(this.connectionURI);
+    this.connectingAttempt = mongoose.connect(this.connectionURI);
+    const connection = await this.connectingAttempt;
     this.connection = connection;
+    this.connectingAttempt = undefined;
     return connection;
   }
 
