@@ -12,7 +12,7 @@ export default function VerifyPhonePage({
   onSuccess: () => void;
 }) {
   const [code, setCode] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { data } = useQuery('sendPhoneVerification', () =>
     fetch('/api/sms/otp/generate', {
       method: 'POST',
@@ -22,7 +22,9 @@ export default function VerifyPhonePage({
       body: JSON.stringify({
         phoneNumber,
       }),
-    }).then((res) => res.json())
+    })
+      .then((res) => res.json())
+      .catch((err) => setError(err?.error || 'Noe gikk galt'))
   );
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function VerifyPhonePage({
         Du skal ha fått en SMS til {phoneNumber}. Vennligst skriv inn koden du
         mottok.
       </h2>
+      {error && <p className='text-error'>{error}</p>}
       <VerificationCodeInput code={code} onChangeCode={setCode} error={error} />
     </div>
   );
