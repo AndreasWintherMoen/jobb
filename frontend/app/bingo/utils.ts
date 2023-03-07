@@ -18,6 +18,17 @@ const bingoTerms = [
   'Kake',
   'Sertifisering',
   'Overgang fra studiet',
+  'Java',
+  'C# og .NET',
+  'Kotlin',
+  'TypeScript',
+  'Frontend utvikler',
+  'Prøve meg på backend',
+  'Studerte også informatikk på NTNU',
+  'Viser bilde av ansatte med øl i hånden',
+  'Konsulent-CV',
+  'Graduate program',
+  'Fleksitid',
 ];
 
 export function getNewBingoTerms(): string[][] {
