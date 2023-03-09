@@ -27,7 +27,7 @@ export default function EventList({ events }: { events: IEvent[] }) {
             {events.map((event: IEvent) => (
               <div
                 key={event.id}
-                className='bg-background rounded-lg overflow-hidden pr-2'
+                className='bg-background rounded-lg overflow-y-hidden pr-2'
               >
                 <Event event={event} />
               </div>

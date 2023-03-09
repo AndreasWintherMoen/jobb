@@ -24,7 +24,7 @@ export default function EventList({ events }: IProps) {
             {capitalize(formatDate(event['registration_start']))}{' '}
             {getEventTime(event['registration_start'])}
           </h3>
-          <div className='bg-background rounded-lg overflow-hidden pr-2'>
+          <div className='bg-background rounded-lg overflow-y-hidden pr-2'>
             <Event event={event} />
           </div>
         </div>
