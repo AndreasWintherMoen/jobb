@@ -10,12 +10,14 @@ export default async function DashboardPage() {
       <Card className='row-span-1 col-span-1'>
         <Header>Mine arrangementer</Header>
         <Suspense fallback={<SkeletonEventList numEvents={3} />}>
+          {/* @ts-expect-error Server Component */}
           <MyEvents />
         </Suspense>
       </Card>
       <Card className='row-span-1 col-span-1'>
         <Header>Kommende påmeldinger</Header>
         <Suspense fallback={<SkeletonEventList numEvents={3} />}>
+          {/* @ts-expect-error Server Component */}
           <UpcomingRegistrations />
         </Suspense>
       </Card>
@@ -25,6 +27,7 @@ export default async function DashboardPage() {
           <FilterHeader />
         </div>
         <Suspense fallback={<SkeletonEventList numEvents={10} />}>
+          {/* @ts-expect-error Server Component */}
           <AllEvents />
         </Suspense>
       </Card>
