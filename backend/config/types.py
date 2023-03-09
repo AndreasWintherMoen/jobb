@@ -104,6 +104,8 @@ class Event(TypedDict):
     registration_start: event_notification_field
     registration_end: event_notification_field
     unattend_deadline: event_notification_field
+    number_on_waitlist: int
+    rule_bundles: List[int]
 
 class EventWithAttendees(Event):
     attendees: List[EventAttendee]

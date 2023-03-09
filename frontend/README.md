@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Bedpres Bot
 
-## Getting Started
+This is the web application for Bedpres Bot. It's made in NextJS and is therefore both front and back-end in the same application. I'm using NextJS 13 with the app directory which is currently in beta. Thus, the pages and routing are located in the _app_ directory as opposed to _pages_ directory which was the standard for NextJS <= 12. This README won't provide more information about NextJS or SSG vs SSR vs CSR, so find a tutorial if necessary.
 
-First, run the development server:
+## How to run
+
+1. Create a file \_.env.local*. See *.env.local.example\*. Ask me if you need database access. If you're going to send an SMS (used to send OTP when registering new users) you have to set up Twilio and add API keys to the application. It costs about $0.05 per SMS and you have to pay that yourself :) You get $15 or so for free, and you don't really need SMS support in most of the application, as most of it is handled in the serverless functions in the backend folder.
+
+2.
+
+```bash
+npm i
+```
+
+3.
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
