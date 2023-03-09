@@ -2,9 +2,8 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
-
-// TODO: Consider moving this type definition somewhere else
-type EventType = 'bedpres' | 'kurs' | 'sosialt';
+import eventTypeToIcon from '../utils/events/eventTypeToIcon';
+import { EventType } from '../utils/events/types';
 
 export default function EventToggle({ eventType }: { eventType: EventType }) {
   const [isToggled, setIsToggled] = useState(true);
@@ -14,7 +13,7 @@ export default function EventToggle({ eventType }: { eventType: EventType }) {
   };
 
   return (
-    <div className='w-full md:basis-1/3 max-w-sm self-center rounded-lg'>
+    <div className='w-full md:basis-1/3 max-w-sm rounded-lg'>
       <Border eventType={eventType} isToggled={isToggled} toggle={toggle}>
         {isToggled && <CheckMark eventType={eventType} />}
         <Content eventType={eventType} />
@@ -39,10 +38,13 @@ function Content({ eventType }: { eventType: EventType }) {
   };
   return (
     <>
-      <h3 className='text-owSecondary font-bold select-none my-6 text-xl p-2 text-center rounded-md'>
+      <h3 className='text-owSecondary font-bold select-none mt-4 md:mt-6 text-xl p-1 md:p-2 text-center rounded-md'>
         {eventTypeToTitle[eventType]}
       </h3>
-      <p className='hidden md:block md:font-bold text-sm md:text-base select-none px-2 md:px-4 pt-2 pb-8'>
+      <div className='flex justify-center mb-3 md:mb-4'>
+        {eventTypeToIcon(eventType)}
+      </div>
+      <p className='hidden md:block font-bold text-base select-none px-4 pt-2 pb-8 text-center'>
         {eventTypeToDescription[eventType]}
       </p>
     </>
@@ -89,10 +91,10 @@ function Border({
   };
   let styling = '';
   if (isToggled)
-    styling = `${eventTypeToBorderStyle[eventType]} bg-background-accent overflow-hidden cursor-pointer box-border border-4 border-opacity-100`;
+    styling = `${eventTypeToBorderStyle[eventType]} h-full bg-background-accent cursor-pointer border-4 border-opacity-100`;
   else
     styling =
-      'bg-background-accent overflow-hidden cursor-pointer border-4 border-background border-opacity-0 box-border';
+      'h-full bg-background-accent cursor-pointer border-4 border-background border-opacity-0';
   return (
     <div onClick={toggle} className={styling}>
       {children}

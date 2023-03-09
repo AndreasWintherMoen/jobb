@@ -1,12 +1,29 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 
-const OWDataSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  id: mongoose.Schema.Types.Number,
-  username: mongoose.Schema.Types.String,
+export const OWDataSchema = new mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
+    index: true,
+  },
+  id: { type: mongoose.Schema.Types.Number, unique: true, required: true },
+  username: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
+  },
   nickname: mongoose.Schema.Types.String,
-  first_name: mongoose.Schema.Types.String,
-  last_name: mongoose.Schema.Types.String,
+  first_name: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
+  },
+  last_name: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
+  },
   phone_number: mongoose.Schema.Types.String,
   online_mail: mongoose.Schema.Types.String,
   address: mongoose.Schema.Types.String,
@@ -16,13 +33,42 @@ const OWDataSchema = new mongoose.Schema({
   github: mongoose.Schema.Types.String,
   linkedin: mongoose.Schema.Types.String,
   ntnu_username: mongoose.Schema.Types.String,
-  field_of_study: mongoose.Schema.Types.Number,
-  year: mongoose.Schema.Types.Number,
-  bio: mongoose.Schema.Types.String,
+  field_of_study: {
+    type: mongoose.Schema.Types.String,
+    unique: true,
+    required: true,
+  },
+  year: { type: mongoose.Schema.Types.String, unique: true, required: true },
+  bio: { type: mongoose.Schema.Types.String, unique: true, required: true },
   positions: mongoose.Schema.Types.Array,
   special_positions: mongoose.Schema.Types.Array,
-  image: mongoose.Schema.Types.String,
-  started_date: mongoose.Schema.Types.String,
+  image: { type: mongoose.Schema.Types.String, unique: true, required: true },
+  started_date: { type: mongoose.Schema.Types.String, required: true },
 });
+
+export interface IOWData {
+  _id?: string;
+  id: number;
+  username: string;
+  nickname?: string;
+  first_name: string;
+  last_name: string;
+  phone_number?: string;
+  online_mail?: string;
+  address?: string;
+  zip_code?: string;
+  email?: string;
+  website?: string;
+  github?: string;
+  linkedin?: string;
+  ntnu_username?: string;
+  field_of_study: string;
+  year: string;
+  bio: string;
+  positions?: string[];
+  special_positions?: string[];
+  image: string;
+  started_date: string;
+}
 
 export default mongoose.model('OWData', OWDataSchema);

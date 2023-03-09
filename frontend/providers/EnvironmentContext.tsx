@@ -19,7 +19,7 @@ export const EnvironmentContext = createContext<IEnvironmentContext>({
   REDIRECT_URI: '',
 });
 
-export function EnvironmentProvider({
+export default function EnvironmentProvider({
   children,
 }: {
   children: React.ReactNode;

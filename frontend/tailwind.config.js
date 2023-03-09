@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -14,9 +17,12 @@ module.exports = {
       },
       background: {
         DEFAULT: '#252525',
-        accent: '#2A2A2A',
+        accent: '#2a2a2a',
+        light: '#2F2F2F',
+        dark: '#191919',
       },
       textPrimary: '#FFFFFF',
+      textAccent: '#BDBDBD',
       event: {
         bedpres: '#EB536E',
         kurs: '#127DBD',
@@ -24,6 +30,7 @@ module.exports = {
       },
       transparent: 'transparent',
       error: '#CC0000',
+      ...colors,
     },
     extend: {
       borderRadius: {
@@ -31,5 +38,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
 };
